@@ -8,8 +8,8 @@
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/mainActivity__body_container"
+        android:id="@+id/mainActivity__body_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

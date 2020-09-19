@@ -3,13 +3,15 @@ package com.example.achacha
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
-import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import com.example.achacha.adapters.MainViewPagerAdapter
 import com.example.achacha.helpers.Protocol.MAIN_CONTENTS_CONTAINER
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
+import com.example.achacha.ui.MainFocusFragment
 import com.example.achacha.ui.MainFragment
 import com.example.achacha.ui.SetUsernameFragment
+import com.example.achacha.ui.ToDoFragment
 import com.example.helpers.BooleanVariable
 import com.example.helpers.FragmentChanger
 import com.example.helpers.PreferencesManager
@@ -35,21 +37,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         init()
-        selectFragment()
         display()
-    }
-
-    private fun selectFragment() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-
     }
 
     private fun init() {
         Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
 
         initVars()
-        initWidgets()
         initFragments()
+        initWidgets()
         initScreenSettings()
         initListeners()
         initUsername()

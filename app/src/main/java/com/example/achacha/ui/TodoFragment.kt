@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
 import com.example.achacha.helpers.Protocol
+import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.PENDING
 import com.example.achacha.helpers.Protocol.UNIQUE_KEY_LENGTH
 import com.example.achacha.helpers.WorkManager
@@ -158,6 +159,9 @@ class TodoFragment : Fragment()
             todos.add(this)
             todoAdapter.notifyItemInserted(todos.size)
         }
+
+        // note. clear focus
+        toDoFragment__body_editor_writer.setText(BLANK)
     }
 
     override fun onClick(v: View) {

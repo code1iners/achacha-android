@@ -24,6 +24,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
         var todosRecyclerView_delete: ImageButton? = null
         init {
             todosRecyclerView_check = v.findViewById(R.id.todosRecyclerView_check)
+            todosRecyclerView_check?.setOnCheckedChangeListener(this)
             todosRecyclerView_todo_read_mode = v.findViewById(R.id.todosRecyclerView_todo_read_mode)
             todosRecyclerView_todo_write_mode = v.findViewById(R.id.todosRecyclerView_todo_write_mode)
             todosRecyclerView_delete = v.findViewById(R.id.todosRecyclerView_delete)

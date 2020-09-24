@@ -7,20 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.Fragment
 import com.example.achacha.MainActivity
 import com.example.achacha.R
+import com.example.achacha.helpers.Protocol
+import com.example.achacha.helpers.Protocol.BLANK
+import com.example.achacha.helpers.Protocol.MAIN_FOCUS
+import com.example.achacha.helpers.Protocol.TODO
+import com.example.achacha.helpers.Protocol.WORK
+import com.example.achacha.helpers.WorkManager
 import com.example.helpers.CustomTimer
+import com.example.helpers.PreferencesManager
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.HashMap
 
-class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTimer.CurrentTimer.CurrentTimerListener {
+class MainFocusFragment : Fragment()
+    , TextView.OnEditorActionListener
+    , View.OnClickListener
+    , CustomTimer.CurrentTimer.CurrentTimerListener
+    , CompoundButton.OnCheckedChangeListener {
 
     // note. widgets-header
+    lateinit var mainFragment__header_clear_button: Button  // note. for test
     lateinit var mainFragment__header_container: LinearLayout
     lateinit var mainFragment__header_timer_hours: TextView
     lateinit var mainFragment__header_timer_minutes: TextView
@@ -28,9 +39,17 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
     lateinit var mainFragment__header_username: TextView
     // note. widgets-body
     lateinit var mainFragment__body_container: LinearLayout
+    // note. widgets-body-QnA
+    lateinit var mainFragment__body_QnA_container: LinearLayout
     lateinit var mainFragment__body_question: TextView
     lateinit var mainFragment__body_answer: EditText
-    // note. widgets-footer
+    // note. widgets-body-focus-contents
+    lateinit var mainFragment__body_focus_contents_container: LinearLayout
+    lateinit var mainFragment__body_focus_contents_data_container: LinearLayout
+    lateinit var mainFragment__body_focus_contents_checkbox: CheckBox
+    lateinit var mainFragment__body_focus_contents_data: TextView
+    lateinit var mainFragment__body_focus_contents_delete: ImageButton
+    // note. widgets-footer-phrase
     lateinit var mainFragment__footer_phrase_container: LinearLayout
     lateinit var mainFragment__footer_phrase: TextView
 
@@ -52,6 +71,8 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
         init(v)
         setCurrentTimer()
         setGreetings()
+        refreshBodyUI()
+
         return v
     }
 
@@ -76,22 +97,33 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
     private fun initWidgets(v: View) {
         Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
         try {
+            // note. for test
+            mainFragment__header_clear_button = v.findViewById(R.id.mainFragment__header_clear_button)
+            mainFragment__header_clear_button.setOnClickListener(this)
             // note. assignment
             mainFragment__header_container = v.findViewById(R.id.mainFragment__header_container)
             mainFragment__header_timer_hours = v.findViewById(R.id.mainFragment__header_timer_hours)
             mainFragment__header_timer_minutes = v.findViewById(R.id.mainFragment__header_timer_minutes)
             mainFragment__header_greeting = v.findViewById(R.id.mainFragment__header_greeting)
             mainFragment__header_username = v.findViewById(R.id.mainFragment__header_username)
-
+            // note. widgets-body-QnA
             mainFragment__body_container = v.findViewById(R.id.mainFragment__body_container)
+            mainFragment__body_QnA_container = v.findViewById(R.id.mainFragment__body_QnA_container)
             mainFragment__body_question = v.findViewById(R.id.mainFragment__body_question)
             mainFragment__body_answer = v.findViewById(R.id.mainFragment__body_answer)
-
+            // note. widgets-body-focus-contents
+            mainFragment__body_focus_contents_container = v.findViewById(R.id.mainFragment__body_focus_contents_container)
+            mainFragment__body_focus_contents_data_container = v.findViewById(R.id.mainFragment__body_focus_contents_data_container)
+            mainFragment__body_focus_contents_checkbox = v.findViewById(R.id.mainFragment__body_focus_contents_checkbox)
+            mainFragment__body_focus_contents_data = v.findViewById(R.id.mainFragment__body_focus_contents_data)
+            mainFragment__body_focus_contents_delete = v.findViewById(R.id.mainFragment__body_focus_contents_delete)
+            // note. widgets-footer-phrase
             mainFragment__footer_phrase_container = v.findViewById(R.id.mainFragment__footer_phrase_container)
             mainFragment__footer_phrase = v.findViewById(R.id.mainFragment__footer_phrase)
 
             // note. listener
             mainFragment__body_answer.setOnEditorActionListener(this)
+            mainFragment__body_focus_contents_delete.setOnClickListener(this)
         } catch (e: Exception) {e.printStackTrace()}
     }
 
@@ -168,20 +200,44 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
         mainFragment__header_username.text = sourceActivity.username
     }
 
-    // note. @override
-    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+    private fun refreshBodyUI() {
         Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-        Timber.i("actionId:$actionId, event:$event")
+        try {
+            // note. check mainFocus non-null
+            val mainFocus = PreferencesManager(activity!!, WORK)[MAIN_FOCUS]
+            Timber.i("mainFocus:$mainFocus")
 
-        when (actionId) {
-            EditorInfo.IME_ACTION_DONE -> {
+            if (mainFocus.isNullOrBlank()) {
+                mainFragment__body_QnA_container.visibility = View.VISIBLE
+                mainFragment__body_focus_contents_container.visibility = View.GONE
 
+                // note. set text
+                mainFragment__body_focus_contents_data.text = BLANK
             }
-        }
+            else {
+                mainFragment__body_QnA_container.visibility = View.GONE
+                mainFragment__body_focus_contents_container.visibility = View.VISIBLE
 
-        return false
+                // note. set text
+                mainFragment__body_focus_contents_data.text = mainFocus
+            }
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
+    private fun deleteMainFocus() {
+        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        try {
+            // note. delete main focus
+            PreferencesManager(activity!!, WORK).remove(MAIN_FOCUS)
+            // note. change UI
+            refreshBodyUI()
+            // note. clear widgets
+            mainFragment__body_focus_contents_data.text = BLANK
+            mainFragment__body_focus_contents_checkbox.isChecked = false
+        } catch (e: Exception) {e.printStackTrace()}
+    }
+
+    // note. @life-cycle
     override fun onPause() {
         super.onPause()
         Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
@@ -200,12 +256,60 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
         timer.isPause = true
     }
 
-    // note. @companion object
-    companion object {
-        val TAG = MainFocusFragment::class.simpleName
+    // note. @listener
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        Timber.i("actionId:$actionId, event:$event")
+
+        try {
+            when (v!!.id) {
+                R.id.mainFragment__body_answer -> {
+                    when (actionId) {
+                        EditorInfo.IME_ACTION_DONE -> {
+                            // note. save main focus data in device
+                            WorkManager.createMainFocus(activity!!, v.text.toString())
+                            // note. clear text
+                            mainFragment__body_answer.setText(BLANK)
+                            // note. change UI
+                            refreshBodyUI()
+                        }
+                    }
+                }
+            }
+
+        } catch (e: Exception) {e.printStackTrace()}
+
+        return false
     }
 
-    // note. @listener
+    override fun onCheckedChanged(v: CompoundButton, isChecked: Boolean) {
+        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        Timber.i("${resources.getResourceEntryName(v.id)}")
+        when (v.id) {
+            R.id.mainFragment__body_focus_contents_checkbox -> {
+                if (isChecked) {
+
+                } else {
+
+                }
+            }
+        }
+    }
+
+    override fun onClick(v: View) {
+        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        Timber.i("${resources.getResourceEntryName(v.id)}")
+        when (v.id) {
+            R.id.mainFragment__header_clear_button -> {
+                WorkManager.clearMainFocus(activity!!)
+            }
+
+            R.id.mainFragment__body_focus_contents_delete -> {
+                deleteMainFocus()
+            }
+        }
+    }
+
     override fun print(year: Int, hours: Int, minutes: Int) {
 //        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
 //        Timber.i("year:$year, hours:$hours, minutes:$minutes")
@@ -220,5 +324,10 @@ class MainFocusFragment : Fragment(), TextView.OnEditorActionListener, CustomTim
         time["year"] = year
         time["hours"] = hours
         time["minutes"] = minutes
+    }
+
+    // note. @companion object
+    companion object {
+        val TAG = MainFocusFragment::class.simpleName
     }
 }

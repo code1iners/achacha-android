@@ -39,5 +39,9 @@ dependencies {
     implementation 'com.github.takeMyHands:helpers-android:0.1.53'
     // note. timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    // note. three ten
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+    // note. gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 }

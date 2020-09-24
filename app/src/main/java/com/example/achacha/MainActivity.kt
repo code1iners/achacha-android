@@ -3,19 +3,16 @@ package com.example.achacha
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.viewpager.widget.ViewPager
-import com.example.achacha.adapters.MainViewPagerAdapter
 import com.example.achacha.helpers.Protocol.MAIN_CONTENTS_CONTAINER
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
-import com.example.achacha.ui.MainFocusFragment
 import com.example.achacha.ui.MainFragment
 import com.example.achacha.ui.SetUsernameFragment
-import com.example.achacha.ui.ToDoFragment
 import com.example.helpers.BooleanVariable
 import com.example.helpers.FragmentChanger
 import com.example.helpers.PreferencesManager
 import com.example.helpers.ScreenManager
+import com.jakewharton.threetenabp.AndroidThreeTen
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -119,6 +116,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     init {
+        // note. init timber
         Timber.plant(Timber.DebugTree())
+        // note. init three ten
+        AndroidThreeTen.init(this)
     }
 }

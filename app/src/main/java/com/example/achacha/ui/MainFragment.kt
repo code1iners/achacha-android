@@ -16,7 +16,7 @@ class MainFragment: Fragment() {
     lateinit var mainFocusFragment__viewPager: ViewPager
 
     // note. fragments
-    lateinit var toDoFragment: ToDoFragment
+    lateinit var toDoFragment: TodoFragment
     lateinit var mainFocusFragment: MainFocusFragment
 
     // note. view pager
@@ -52,7 +52,7 @@ class MainFragment: Fragment() {
     private fun initFragments() {
         Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
 
-        toDoFragment = ToDoFragment()
+        toDoFragment = TodoFragment()
         mainFocusFragment = MainFocusFragment()
     }
 

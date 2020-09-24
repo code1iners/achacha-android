@@ -16,4 +16,9 @@
     <string name="phrase_001">Do more of what makes you happy.</string>
     <string name="set_username_question">Hello, what\'s your name?</string>
     <string name="today">Today</string>
+    <string name="main_focus">Main Focus</string>
+    <string name="focus_contents_title">TODAY</string>
+    <string name="guide_blank_title">Add a todo to get started.</string>
+    <string name="guide_blank_subtitle">Switch to </string>
+    <string name="btn_todo_create">Create</string>
 </resources>

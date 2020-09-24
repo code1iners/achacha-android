@@ -25,31 +25,100 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/toDoFragment__body_editor_container"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/toDoFragment__body_editor"
+            android:id="@+id/toDoFragment__body_editor_writer"
             android:hint="New ToDo"
             android:singleLine="true"
             android:imeOptions="actionDone"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/toDoFragment__body_editor_submit"
+            android:layout_marginHorizontal="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/toDoFragment__body_editor_submit"
+            android:text="@string/btn_todo_create"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/border_5"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"/>
+
+    </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/toDoFragment__footer_list_container"
+        android:id="@+id/toDoFragment__body_list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/toDoFragment__footer_list"
+            android:id="@+id/toDoFragment__body_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/toDoFragment__body_blank_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/toDoFragment__body_blank_title_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/toDoFragment__body_blank_title"
+                android:text="@string/guide_blank_title"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toDoFragment__body_blank_subtitle_container"
+            android:layout_below="@+id/toDoFragment__body_blank_title_container"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/toDoFragment__body_blank_subtitle"
+                android:text="@string/guide_blank_subtitle"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/toDoFragment__body_blank_subtitle_value"
+                android:text="@string/today"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:src="@drawable/arrow_003_r"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="3dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

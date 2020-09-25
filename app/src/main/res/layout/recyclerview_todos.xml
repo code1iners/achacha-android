@@ -16,15 +16,16 @@
     <TextView
         android:id="@+id/todosRecyclerView_todo_read_mode"
         android:layout_toEndOf="@+id/todosRecyclerView_check"
-        android:layout_toStartOf="@+id/todosRecyclerView_menu"
+        android:layout_toStartOf="@+id/todosRecyclerView_delete"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/todosRecyclerView_todo_write_mode"
+        android:visibility="gone"
         android:layout_toEndOf="@+id/todosRecyclerView_check"
-        android:layout_toStartOf="@+id/todosRecyclerView_delete"
+        android:layout_toStartOf="@+id/todosRecyclerView_update"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -32,6 +33,18 @@
     <ImageButton
         android:id="@+id/todosRecyclerView_delete"
         android:src="@drawable/delete_003"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="5dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
+    <ImageButton
+        android:id="@+id/todosRecyclerView_update"
+        android:visibility="gone"
+        android:src="@drawable/check_001"
         android:scaleType="fitCenter"
         android:background="@null"
         android:layout_alignParentEnd="true"

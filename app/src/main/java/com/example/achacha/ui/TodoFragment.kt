@@ -1,6 +1,7 @@
 package com.example.achacha.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
-import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.BLANK
-import com.example.achacha.helpers.Protocol.PENDING
-import com.example.achacha.helpers.Protocol.UNIQUE_KEY_LENGTH
 import com.example.achacha.helpers.WorkManager
 import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
 import com.example.achacha.models.TodoModel
-import com.example.helpers.PasswordGenerator
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 
@@ -138,6 +133,7 @@ class TodoFragment : Fragment()
         try {
             todoAdapter = TodoAdapter()
             todoAdapter.context = context!!
+            todoAdapter.handler = Handler()
             todoAdapter.onTodoListener = this
             todoAdapter.todos = todos
 
@@ -162,6 +158,8 @@ class TodoFragment : Fragment()
 
         // note. clear focus
         toDoFragment__body_editor_writer.setText(BLANK)
+
+        display()
     }
 
     override fun onClick(v: View) {
@@ -214,6 +212,17 @@ class TodoFragment : Fragment()
         // note. delete ui
         todos.removeAt(p)
         todoAdapter.notifyItemRemoved(p)
+
+        display()
+    }
+
+    override fun todoUpdate(h: TodoAdapter.CustomViewHolder, p: Int, m: TodoModel) {
+        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+
+        WorkManager.updateTodo(activity!!, p, m.apply {
+            value = h.todosRecyclerView_todo_write_mode?.text.toString()
+            updated = LocalDateTime.now().toString()
+        })
     }
 
     // note. @companion object

@@ -54,6 +54,12 @@ class WorkManager {
             return JSONArray()
         }
 
+        fun updateTodo(activity: Activity, position: Int, model: TodoModel) {
+            val arr = readTodo(activity)
+            arr.put(position, Gson().toJson(model))
+            PreferencesManager(activity, WORK).add(TODO, arr.toString())
+        }
+
         fun deleteTodo(activity: Activity, position: Int) {
             val arr = readTodo(activity)
             arr.remove(position)

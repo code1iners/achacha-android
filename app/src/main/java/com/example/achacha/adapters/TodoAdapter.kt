@@ -1,6 +1,7 @@
 package com.example.achacha.adapters
 
 import android.content.Context
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,29 +15,61 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 
     lateinit var todos: ArrayList<TodoModel>
     lateinit var context: Context
+    lateinit var handler: Handler
     lateinit var onTodoListener: OnTodoListener
 
     inner class CustomViewHolder(v: View): RecyclerView.ViewHolder(v)
-        , View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+        , View.OnClickListener
+        , CompoundButton.OnCheckedChangeListener {
         var todosRecyclerView_check: CheckBox? = null
         var todosRecyclerView_todo_read_mode: TextView? = null
         var todosRecyclerView_todo_write_mode: EditText? = null
         var todosRecyclerView_delete: ImageButton? = null
+        var todosRecyclerView_update: ImageButton? = null
         init {
             todosRecyclerView_check = v.findViewById(R.id.todosRecyclerView_check)
             todosRecyclerView_check?.setOnCheckedChangeListener(this)
             todosRecyclerView_todo_read_mode = v.findViewById(R.id.todosRecyclerView_todo_read_mode)
+            todosRecyclerView_todo_read_mode?.setOnClickListener(this)
             todosRecyclerView_todo_write_mode = v.findViewById(R.id.todosRecyclerView_todo_write_mode)
             todosRecyclerView_delete = v.findViewById(R.id.todosRecyclerView_delete)
             todosRecyclerView_delete?.setOnClickListener(this)
+            todosRecyclerView_update = v.findViewById(R.id.todosRecyclerView_update)
+            todosRecyclerView_update?.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
             Timber.i(context.resources.getResourceEntryName(v.id))
             val p = adapterPosition
+            val h = this
             when (v.id) {
+                R.id.todosRecyclerView_todo_read_mode -> {
+                    // note. set widgets
+                    todosRecyclerView_todo_read_mode?.visibility = View.GONE
+                    todosRecyclerView_delete?.visibility = View.GONE
+                    todosRecyclerView_todo_write_mode?.visibility = View.VISIBLE
+                    todosRecyclerView_update?.visibility = View.VISIBLE
+                }
+
                 R.id.todosRecyclerView_delete -> {
+//                    val anim = WidgetManager.AnimationManager.getRemoveLeft(context)
+//                    todosRecyclerView_delete?.startAnimation(anim)
+//                    handler.postDelayed({
+//                        onTodoListener.todoDelete(p)
+//                    }, anim.duration)
                     onTodoListener.todoDelete(p)
+                }
+
+                R.id.todosRecyclerView_update -> {
+                    // note. set widgets
+                    todosRecyclerView_todo_read_mode?.visibility = View.VISIBLE
+                    todosRecyclerView_delete?.visibility = View.VISIBLE
+                    todosRecyclerView_todo_write_mode?.visibility = View.GONE
+                    todosRecyclerView_update?.visibility = View.GONE
+
+                    todosRecyclerView_todo_write_mode?.setText(todos[p].value)
+                    
+                    onTodoListener.todoUpdate(h, p, todos[p])
                 }
             }
         }
@@ -76,6 +109,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 
     interface OnTodoListener {
         fun todoDelete(p: Int)
+        fun todoUpdate(h: CustomViewHolder, p: Int, m: TodoModel)
     }
 
 }

@@ -37,8 +37,10 @@ dependencies {
 
     // note. helper
     implementation 'com.github.takeMyHands:helpers-android:0.1.53'
-    // note. timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+//    // note. timber
+//    implementation 'com.jakewharton.timber:timber:4.7.1'
+    // note. logger
+    implementation 'com.orhanobut:logger:2.2.0' //현재 최신버전
     // note. three ten
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
     // note. gson

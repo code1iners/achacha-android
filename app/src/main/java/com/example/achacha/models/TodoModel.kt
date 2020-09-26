@@ -1,7 +1,7 @@
 package com.example.achacha.models
 
+import com.orhanobut.logger.Logger
 import org.json.JSONObject
-import timber.log.Timber
 
 class TodoModel {
     var category: String? = null
@@ -12,18 +12,18 @@ class TodoModel {
     var updated: String? = null
     var key: String? = null
 
-    fun logger() {
-        Timber.i("category:$category")
-        Timber.i("categoryPosition:$categoryPosition")
-        Timber.i("value:$value")
-        Timber.i("status:$status")
-        Timber.i("created:$created")
-        Timber.i("updated:$updated")
-        Timber.i("key:$key")
+    fun log() {
+        Logger.i("category:$category")
+        Logger.i("categoryPosition:$categoryPosition")
+        Logger.i("value:$value")
+        Logger.i("status:$status")
+        Logger.i("created:$created")
+        Logger.i("updated:$updated")
+        Logger.i("key:$key")
     }
 
     fun toJson(): JSONObject{
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         val obj = JSONObject()
         try {
             obj.put("category", this.category)
@@ -35,7 +35,7 @@ class TodoModel {
             obj.put("key", this.key)
         } catch (e: Exception) {e.printStackTrace()}
 
-        Timber.i( "obj:${obj}")
+        Logger.i( "obj:${obj}")
 
         return obj
     }

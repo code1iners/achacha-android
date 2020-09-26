@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.achacha.R
 import com.example.achacha.adapters.MainViewPagerAdapter
-import timber.log.Timber
+import com.orhanobut.logger.Logger
 
 class MainFragment: Fragment() {
 
@@ -36,7 +36,7 @@ class MainFragment: Fragment() {
     }
 
     private fun init(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         initWidgets(v)
         initFragments()
@@ -44,26 +44,26 @@ class MainFragment: Fragment() {
     }
 
     private fun initWidgets(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         mainFocusFragment__viewPager = v.findViewById(R.id.mainFocusFragment__viewPager)
     }
 
     private fun initFragments() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         toDoFragment = TodoFragment()
         mainFocusFragment = MainFocusFragment()
     }
 
     private fun initAdapters() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         initViewPagerAdapters()
     }
 
     private fun initViewPagerAdapters() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             mainViewPagerAdapter = MainViewPagerAdapter(fragmentManager!!)
 
@@ -77,7 +77,7 @@ class MainFragment: Fragment() {
     }
 
     private fun display() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         mainViewPagerAdapter.notifyDataSetChanged()
     }

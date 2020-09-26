@@ -14,7 +14,7 @@ import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
 import com.example.helpers.PreferencesManager
-import timber.log.Timber
+import com.orhanobut.logger.Logger
 
 class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
 
@@ -37,14 +37,14 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun init(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         initSource()
         initWidgets(v)
     }
 
     private fun initSource() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             sourceActivity = context!! as MainActivity
 
@@ -52,7 +52,7 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun initWidgets(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         // note. assignment
         setUsernameFragment__username_answer = v.findViewById(R.id.setUsernameFragment__username_answer)
@@ -63,7 +63,7 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         when (actionId) {
             EditorInfo.IME_ACTION_DONE -> {
                 finishWithData(v!!.text.toString())
@@ -74,7 +74,7 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun finishWithData(text: String) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             PreferencesManager(activity!!, USER_PROFILE).add(USERNAME, text)
             sourceActivity.username = text

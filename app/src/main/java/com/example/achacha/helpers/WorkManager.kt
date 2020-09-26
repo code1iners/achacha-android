@@ -8,17 +8,17 @@ import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.models.TodoModel
 import com.example.helpers.PasswordGenerator
 import com.google.gson.Gson
+import com.orhanobut.logger.Logger
 import org.json.JSONArray
 import org.json.JSONObject
 import org.threeten.bp.LocalDateTime
-import timber.log.Timber
 
 class WorkManager {
     companion object {
 
         // note. todo
         fun createTodo(activity: Activity, mapData: HashMap<String, String>): TodoModel? {
-            Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+            
             try {
                 // note. data setting
                 val generator = PasswordGenerator.PasswordGeneratorBuilder().useDigits(true).useLower(true).useUpper(true).usePunctuation(true).build()
@@ -31,7 +31,7 @@ class WorkManager {
                     updated = created.toString()
                     key = generator.generate(Protocol.UNIQUE_KEY_LENGTH)
                 }
-                model.logger()
+                model.log()
 
                 val arr = readTodo(activity)
                 // note. model to jsonObject
@@ -48,7 +48,7 @@ class WorkManager {
 
         fun readTodo(activity: Activity): JSONArray {
             PreferencesManager(activity, WORK)[TODO]?.run {
-                Timber.i("todoAsString:$this")
+                Logger.i("todoAsString:$this")
                 return JSONArray(this)
             }
             return JSONArray()

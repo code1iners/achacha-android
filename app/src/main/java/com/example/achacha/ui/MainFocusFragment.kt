@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.Fragment
 import com.example.achacha.MainActivity
 import com.example.achacha.R
+import com.example.achacha.helpers.CategoryManager
 import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.MAIN_FOCUS
@@ -20,7 +21,7 @@ import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.helpers.WorkManager
 import com.example.helpers.CustomTimer
 import com.example.helpers.PreferencesManager
-import timber.log.Timber
+import com.orhanobut.logger.Logger
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -77,7 +78,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun init(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         initVars()
         initWidgets(v)
@@ -85,7 +86,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun initVars() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         // note. source activity
         try {sourceActivity = context!! as MainActivity}
         catch (e: Exception) {e.printStackTrace()}
@@ -95,7 +96,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun initWidgets(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             // note. for test
             mainFragment__header_clear_button = v.findViewById(R.id.mainFragment__header_clear_button)
@@ -128,12 +129,12 @@ class MainFocusFragment : Fragment()
     }
 
     private fun initListeners() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
     }
 
     private fun setCurrentTimer() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         timer = CustomTimer.CurrentTimer()
         timer.currentTimerListener = this
@@ -141,7 +142,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun setGreetings() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
 
         // note. greeting
         greetingAsArray()
@@ -151,7 +152,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun greetingAsArray() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             val greetingArrays = arrayOf(
                 resources.getString(R.string.greeting_at_001),
@@ -172,7 +173,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun greetingAsTime() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             val hours = time["hours"]!!
             when (hours) {
@@ -196,16 +197,16 @@ class MainFocusFragment : Fragment()
     }
 
     private fun setUsername() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         mainFragment__header_username.text = sourceActivity.username
     }
 
     private fun refreshBodyUI() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             // note. check mainFocus non-null
             val mainFocus = PreferencesManager(activity!!, WORK)[MAIN_FOCUS]
-            Timber.i("mainFocus:$mainFocus")
+            Logger.i("mainFocus:$mainFocus")
 
             if (mainFocus.isNullOrBlank()) {
                 mainFragment__body_QnA_container.visibility = View.VISIBLE
@@ -225,7 +226,7 @@ class MainFocusFragment : Fragment()
     }
 
     private fun deleteMainFocus() {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+        
         try {
             // note. delete main focus
             PreferencesManager(activity!!, WORK).remove(MAIN_FOCUS)
@@ -240,26 +241,26 @@ class MainFocusFragment : Fragment()
     // note. @life-cycle
     override fun onPause() {
         super.onPause()
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+//        
         timer.isPause = true
     }
 
     override fun onResume() {
         super.onResume()
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+//        
         timer.isPause = false
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
+//        
         timer.isPause = true
     }
 
     // note. @listener
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-        Timber.i("actionId:$actionId, event:$event")
+        
+        Logger.i("actionId:$actionId, event:$event")
 
         try {
             when (v!!.id) {
@@ -283,8 +284,8 @@ class MainFocusFragment : Fragment()
     }
 
     override fun onCheckedChanged(v: CompoundButton, isChecked: Boolean) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-        Timber.i("${resources.getResourceEntryName(v.id)}")
+        
+        Logger.i("${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__body_focus_contents_checkbox -> {
                 if (isChecked) {
@@ -297,11 +298,12 @@ class MainFocusFragment : Fragment()
     }
 
     override fun onClick(v: View) {
-        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-        Timber.i("${resources.getResourceEntryName(v.id)}")
+        
+        Logger.i("${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__header_clear_button -> {
                 WorkManager.clearMainFocus(activity!!)
+                CategoryManager.clearCategory(activity!!)
             }
 
             R.id.mainFragment__body_focus_contents_delete -> {
@@ -311,8 +313,8 @@ class MainFocusFragment : Fragment()
     }
 
     override fun print(year: Int, hours: Int, minutes: Int) {
-//        Timber.w(object:Any(){}.javaClass.enclosingMethod!!.name)
-//        Timber.i("year:$year, hours:$hours, minutes:$minutes")
+//        
+//        Logger.i("year:$year, hours:$hours, minutes:$minutes")
 
         // note. for current time
         handler.post {

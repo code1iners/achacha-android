@@ -9,7 +9,7 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.models.TodoModel
-import timber.log.Timber
+import com.orhanobut.logger.Logger
 
 class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 
@@ -39,7 +39,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
         }
 
         override fun onClick(v: View) {
-            Timber.i(context.resources.getResourceEntryName(v.id))
+            Logger.i(context.resources.getResourceEntryName(v.id))
             val p = adapterPosition
             val h = this
             when (v.id) {
@@ -75,13 +75,13 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
         }
 
         override fun onCheckedChanged(v: CompoundButton, b: Boolean) {
-            Timber.i(context.resources.getResourceEntryName(v.id))
+            Logger.i(context.resources.getResourceEntryName(v.id))
             when (v.id) {
                 R.id.todosRecyclerView_check -> {
                     if (b) {
-                        Timber.d("status:true")
+                        Logger.d("status:true")
                     } else {
-                        Timber.d("status:false")
+                        Logger.d("status:false")
                     }
                 }
             }

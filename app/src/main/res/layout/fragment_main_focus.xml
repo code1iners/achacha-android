@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/mainFragment__header_clear_button"
         android:text="clear"
         android:layout_width="wrap_content"

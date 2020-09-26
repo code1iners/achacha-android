@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/toDoFragment__body_editor_writer"
-            android:hint="New ToDo"
+            android:hint="New Todo"
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:layout_centerVertical="true"

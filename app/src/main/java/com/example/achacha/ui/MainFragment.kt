@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.achacha.R
 import com.example.achacha.adapters.MainViewPagerAdapter
-import com.orhanobut.logger.Logger
 
 class MainFragment: Fragment() {
 
@@ -18,9 +17,6 @@ class MainFragment: Fragment() {
     // note. fragments
     lateinit var toDoFragment: TodoFragment
     lateinit var mainFocusFragment: MainFocusFragment
-
-    // note. view pager
-    lateinit var mainViewPagerAdapter: MainViewPagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,34 +32,25 @@ class MainFragment: Fragment() {
     }
 
     private fun init(v: View) {
-        
-
         initWidgets(v)
         initFragments()
         initAdapters()
     }
 
     private fun initWidgets(v: View) {
-        
-
         mainFocusFragment__viewPager = v.findViewById(R.id.mainFocusFragment__viewPager)
     }
 
     private fun initFragments() {
-        
-
         toDoFragment = TodoFragment()
         mainFocusFragment = MainFocusFragment()
     }
 
     private fun initAdapters() {
-        
-
         initViewPagerAdapters()
     }
 
     private fun initViewPagerAdapters() {
-        
         try {
             mainViewPagerAdapter = MainViewPagerAdapter(fragmentManager!!)
 
@@ -77,13 +64,14 @@ class MainFragment: Fragment() {
     }
 
     private fun display() {
-        
-
         mainViewPagerAdapter.notifyDataSetChanged()
     }
 
     // note. @companion object
     companion object {
         val TAG = MainFragment::class.simpleName
+
+        // note. view pager
+        lateinit var mainViewPagerAdapter: MainViewPagerAdapter
     }
 }

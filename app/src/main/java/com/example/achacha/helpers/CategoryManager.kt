@@ -29,6 +29,7 @@ class CategoryManager {
         // note. save in device
         arr.put(pk, result)
 
+
         PreferencesManager(activity, WORK).add(CATEGORY, arr.toString())
 
       } catch (e: Exception) {e.printStackTrace()}

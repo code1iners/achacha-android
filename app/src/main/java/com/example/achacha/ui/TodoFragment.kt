@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
-import com.example.achacha.helpers.CategoryManager
 import com.example.achacha.helpers.CategoryManager.Companion.createCategory
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAllAsJsonArray
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAsJsonObject
@@ -32,8 +31,8 @@ import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
+import org.json.JSONArray
 import org.threeten.bp.LocalDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -80,7 +79,6 @@ class TodoFragment : Fragment()
     }
 
     private fun getData() {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
         try {
             val arr= WorkManager.readTodo(activity!!)
             for (idx in 0 until arr.length()) {
@@ -95,8 +93,6 @@ class TodoFragment : Fragment()
     }
 
     private fun display() {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
         if (todos.size == 0) {
             toDoFragment__body_list_container.visibility = View.GONE
             toDoFragment__body_blank_container.visibility = View.VISIBLE
@@ -107,22 +103,18 @@ class TodoFragment : Fragment()
     }
 
     private fun init(v: View) {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
         initVars()
         initWidgets(v)
-        initModels()
         initAdapters()
     }
 
     private fun initVars() {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
+        todos = ArrayList()
+        categories = ArrayList()
+        listOfSpinner = ArrayList()
     }
 
     private fun initWidgets(v: View) {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
         toDoFragment__header_kind = v.findViewById(R.id.toDoFragment__header_kind)
         toDoFragment__header_kind.onItemSelectedListener = this
 
@@ -144,21 +136,12 @@ class TodoFragment : Fragment()
         toDoFragment__body_editor_submit.setOnClickListener(this)
     }
 
-    private fun initModels() {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
-        todos = ArrayList()
-    }
-
     private fun initAdapters() {
-        Logger.i(object : Any() {}.javaClass.enclosingMethod!!.name)
-
         initTodoAdapter()
         initSpinnerAdapter()
     }
 
     private fun initTodoAdapter() {
-
         try {
             todoAdapter = TodoAdapter()
             todoAdapter.context = context!!
@@ -173,35 +156,8 @@ class TodoFragment : Fragment()
 
     private fun initSpinnerAdapter() {
         try {
-            categories = ArrayList()
-
-            var arr = readCategoryAllAsJsonArray(activity!!)
-
-            Logger.i("arrayLength:$${arr.length()}")
-            // note. check non null
-            if (arr.length() == 0) arr.put(createCategory(activity!!, 0, "Today"))
-
-            // note. check new list item
-            val newList = readCategoryAsJsonObject(activity!!, resources.getString(R.string.kind_new_list))
-            if (newList == null) arr.put(createCategory(activity!!, 1, resources.getString(R.string.kind_new_list)))
-            Logger.i("arr:$arr")
-
-            // note. set category list
-            for (idx in 0 until arr.length()) {
-                categories.add(CategoryModel().apply {
-                    pk = arr.getJSONObject(idx).getInt("pk")
-                    category = arr.getJSONObject(idx).getString("category")
-                    created = arr.getJSONObject(idx).getString("created")
-                    updated = arr.getJSONObject(idx).getString("updated")
-                    this.log()
-                })
-            }
-
-            // note. set spinner list
-            listOfSpinner = ArrayList()
-            for (item in categories) {
-                item.category?.let { listOfSpinner.add(it) }
-            }
+            // note. init categories & spinner list
+            initCategories()
 
             // note. set adapter
             spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, listOfSpinner)
@@ -211,9 +167,36 @@ class TodoFragment : Fragment()
         } catch (e: Exception) {e.printStackTrace()}
     }
 
+    private fun initCategories() {
+        var arr = readCategoryAllAsJsonArray(activity!!)
+        Logger.i("arrayLength:$${arr.length()}")
+
+        // note. check non null
+        if (arr.length() == 0) arr.put(createCategory(activity!!, 0, "Today"))
+
+        // note. check new list item
+        val newList = readCategoryAsJsonObject(activity!!, resources.getString(R.string.kind_new_list))
+        if (newList == null) arr.put(createCategory(activity!!, 1, resources.getString(R.string.kind_new_list)))
+        Logger.i("arr:$arr")
+
+        // note. set category list
+        for (idx in 0 until arr.length()) {
+            categories.add(CategoryModel().apply {
+                pk = arr.getJSONObject(idx).getInt("pk")
+                category = arr.getJSONObject(idx).getString("category")
+                created = arr.getJSONObject(idx).getString("created")
+                updated = arr.getJSONObject(idx).getString("updated")
+                this.log()
+            })
+        }
+
+        // note. set spinner list
+        for (item in categories) {
+            item.category?.let { listOfSpinner.add(it) }
+        }
+    }
+
     private fun createTodo() {
-
-
         val mapData: HashMap<String, String> = HashMap()
         mapData["category"] = toDoFragment__header_kind.selectedItem.toString()
         mapData["categoryPosition"] = toDoFragment__header_kind.selectedItemPosition.toString()
@@ -229,6 +212,16 @@ class TodoFragment : Fragment()
         toDoFragment__body_editor_writer.setText(BLANK)
 
         display()
+    }
+
+    fun resetCategories() {
+        Logger.i("categoriesSize:${categories.size}")
+        categories.clear()
+        listOfSpinner.clear()
+        initCategories()
+        spinnerAdapter.notifyDataSetChanged()
+        Logger.i("categoriesSize:${categories.size}")
+
     }
 
     override fun onClick(v: View) {
@@ -355,8 +348,6 @@ class TodoFragment : Fragment()
     }
 
     override fun todoDelete(p: Int) {
-
-
         // note. delete real data
         deleteTodo(activity!!, p)
         // note. delete ui

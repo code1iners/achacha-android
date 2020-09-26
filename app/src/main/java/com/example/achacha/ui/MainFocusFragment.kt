@@ -304,6 +304,9 @@ class MainFocusFragment : Fragment()
             R.id.mainFragment__header_clear_button -> {
                 WorkManager.clearMainFocus(activity!!)
                 CategoryManager.clearCategory(activity!!)
+
+                val fragment = MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
+                fragment.resetCategories()
             }
 
             R.id.mainFragment__body_focus_contents_delete -> {

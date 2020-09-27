@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
-import com.example.achacha.helpers.CategoryManager.Companion.createCategory
+import com.example.achacha.helpers.CategoryManager.Companion.createCategoryAsJsonObject
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAllAsJsonArray
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAsJsonObject
 import com.example.achacha.helpers.Protocol.BLANK
@@ -58,7 +58,7 @@ class TodoFragment : Fragment()
     // note. lists
     private lateinit var todos: ArrayList<TodoModel>
     private lateinit var categories: ArrayList<CategoryModel>
-    private lateinit var listOfSpinner: ArrayList<String>
+    private lateinit var spinnerList: ArrayList<String>
 
     // note. kind
     private var selectedKind: String? = null
@@ -104,7 +104,7 @@ class TodoFragment : Fragment()
     }
 
     private fun refresh() {
-        Log.i("TAG", "asdfasdf")
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
         val temp = todos
         Log.i(TAG, "todosSize:${todos.size}")
         todos.clear()
@@ -130,7 +130,7 @@ class TodoFragment : Fragment()
     private fun initVars() {
         todos = ArrayList()
         categories = ArrayList()
-        listOfSpinner = ArrayList()
+        spinnerList = ArrayList()
     }
 
     private fun initWidgets(v: View) {
@@ -179,7 +179,7 @@ class TodoFragment : Fragment()
             initCategories()
 
             // note. set adapter
-            spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, listOfSpinner)
+            spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerList)
             toDoFragment__header_kind.adapter = spinnerAdapter
             spinnerAdapter.notifyDataSetChanged()
 
@@ -187,32 +187,37 @@ class TodoFragment : Fragment()
     }
 
     private fun initCategories() {
-        var arr = readCategoryAllAsJsonArray(activity!!)
-        Log.i(TAG, "arrayLength:$${arr.length()}")
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        try {
+            val categoriesAsJsonArray = readCategoryAllAsJsonArray(activity!!)
+            Log.i(TAG, "size:${categoriesAsJsonArray?.length()}, array:${categoriesAsJsonArray.toString()}")
 
-        // note. check non null
-        if (arr.length() == 0) arr.put(createCategory(activity!!, 0, "Today"))
+            // note. size checker
+            if (categoriesAsJsonArray?.length() == 0) {
+                Log.w(TAG, "categoriesAsJsonArraySize is 0")
+                // note. create Today
+                categories.add(Gson().fromJson(createCategoryAsJsonObject(activity!!, 0, "Today").toString(), CategoryModel::class.java))
+                categories.add(Gson().fromJson(createCategoryAsJsonObject(activity!!, 9999, resources.getString(R.string.kind_new_list)).toString(), CategoryModel::class.java))
+                
+            } else {
+                if (categoriesAsJsonArray != null) {
+                    for (idx in 0 until categoriesAsJsonArray.length()) {
+                        categories.add(Gson().fromJson(categoriesAsJsonArray.getJSONObject(idx).toString(), CategoryModel::class.java))
+                    }
+                }
+            }
 
-        // note. check new list item
-        val newList = readCategoryAsJsonObject(activity!!, resources.getString(R.string.kind_new_list))
-        if (newList == null) arr.put(createCategory(activity!!, 1, resources.getString(R.string.kind_new_list)))
-        Log.i(TAG, "arr:$arr")
+            categories.sortBy { it.pk }
 
-        // note. set category list
-        for (idx in 0 until arr.length()) {
-            categories.add(CategoryModel().apply {
-                pk = arr.getJSONObject(idx).getInt("pk")
-                category = arr.getJSONObject(idx).getString("category")
-                created = arr.getJSONObject(idx).getString("created")
-                updated = arr.getJSONObject(idx).getString("updated")
-                this.log()
-            })
-        }
+            for ((idx, item) in categories.withIndex()) {
+                item.category?.let {
+                    item.log()
+                    spinnerList.add(it)
+                }
+            }
 
-        // note. set spinner list
-        for (item in categories) {
-            item.category?.let { listOfSpinner.add(it) }
-        }
+        } catch (e: Exception) {e.printStackTrace()}
+
     }
 
     private fun createTodo() {
@@ -236,7 +241,7 @@ class TodoFragment : Fragment()
     fun resetCategories() {
         Log.i(TAG,"categoriesSize:${categories.size}")
         categories.clear()
-        listOfSpinner.clear()
+        spinnerList.clear()
         initCategories()
         spinnerAdapter.notifyDataSetChanged()
         Log.i(TAG,"categoriesSize:${categories.size}")
@@ -286,12 +291,12 @@ class TodoFragment : Fragment()
                             try {
                                 value?.let {
                                     Log.e(TAG, "categoriesLastIndex:${categories.lastIndex}, size:${categories.size}")
-                                    val obj = createCategory(activity!!, categories.lastIndex, it)
+                                    val obj = createCategoryAsJsonObject(activity!!, categories.size, it)
                                     val m = Gson().fromJson(obj.toString(), CategoryModel::class.java)
                                     m.log()
                                     categories.add(m)
                                     m.category?.run {
-                                        listOfSpinner.add(categories.lastIndex - 1, this)
+                                        spinnerList.add(this)
                                         spinnerAdapter.notifyDataSetChanged()
                                     }
 

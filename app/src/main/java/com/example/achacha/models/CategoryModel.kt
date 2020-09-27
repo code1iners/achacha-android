@@ -9,7 +9,7 @@ class CategoryModel {
   var updated: String? = null
 
   fun log() {
-    Log.i(TAG, "pk:${this.pk}" +
+    Log.i(TAG, "\npk:${this.pk}" +
         "\ncategory:${this.category}" +
         "\ncreated:${this.created}" +
         "\nupdated:${this.updated}"

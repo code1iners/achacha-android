@@ -17,37 +17,38 @@ class CategoryManager {
   companion object {
     val TAG = CategoryManager::class.simpleName
 
-    fun createCategory(activity: Activity, pk: Int, category: String): JSONObject {
-      Log.i(TAG, "pk:$pk, category:$category")
+    fun createCategoryAsJsonObject(activity: Activity, pk: Int, category: String): JSONObject? {
+      Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
       val created = LocalDateTime.now()
-      val arr = readCategoryAllAsJsonArray(activity)
-      val result = JSONObject()
+      val array = readCategoryAllAsJsonArray(activity)
+      val result = JSONObject().apply {
+        this.put("pk", pk)
+        this.put("category", category)
+        this.put("created", created)
+        this.put("updated", created)
+      }
       try {
-        result.put("pk", pk)
-        result.put("category", category)
-        result.put("created", created)
-        result.put("updated", created)
-
-        // note. save in device
-        arr.put(pk, result)
-
-
-        PreferencesManager(activity, WORK).add(CATEGORY, arr.toString())
-
+        array?.let {
+          it.put(result)
+          PreferencesManager(activity, WORK).add(CATEGORY, it.toString())
+        }
       } catch (e: Exception) {e.printStackTrace()}
+
       return result
     }
 
-    fun readCategoryAllAsJsonArray(activity: Activity): JSONArray {
-      return if (PreferencesManager(activity, WORK)[CATEGORY].isNullOrBlank()) JSONArray() else JSONArray(PreferencesManager(activity, WORK)[CATEGORY])
+    fun readCategoryAllAsJsonArray(activity: Activity): JSONArray? {
+
+      val categoriesAsString = PreferencesManager(activity, WORK)[CATEGORY]
+      Log.i(TAG, "categoriesAsString:$categoriesAsString")
+
+      return if (categoriesAsString.isNullOrBlank()) JSONArray() else JSONArray(categoriesAsString)
     }
 
     fun readCategoryAsJsonObject(activity: Activity, category: String): JSONObject? {
-      val arr = readCategoryAllAsJsonArray(activity)
-      for (idx in 0 until arr.length()) {
-        val obj = arr.getJSONObject(idx)
-        if (obj.getString("category") == category) return obj
-      }
+
+
+
       return null
     }
 

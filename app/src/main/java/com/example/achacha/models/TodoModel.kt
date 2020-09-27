@@ -1,6 +1,6 @@
 package com.example.achacha.models
 
-import com.orhanobut.logger.Logger
+import android.util.Log
 import org.json.JSONObject
 
 class TodoModel {
@@ -13,13 +13,13 @@ class TodoModel {
     var key: String? = null
 
     fun log() {
-        Logger.i("category:$category")
-        Logger.i("categoryPosition:$categoryPosition")
-        Logger.i("value:$value")
-        Logger.i("status:$status")
-        Logger.i("created:$created")
-        Logger.i("updated:$updated")
-        Logger.i("key:$key")
+        Log.i(TAG, "category:$category\n" +
+            "categoryPosition:$categoryPosition\n" +
+            "value:$value\n" +
+            "status:$status\n" +
+            "created:$created\n" +
+            "updated:$updated\n" +
+            "key:$key")
     }
 
     fun toJson(): JSONObject{
@@ -35,7 +35,7 @@ class TodoModel {
             obj.put("key", this.key)
         } catch (e: Exception) {e.printStackTrace()}
 
-        Logger.i( "obj:${obj}")
+        Log.i( TAG, "obj:${obj}")
 
         return obj
     }

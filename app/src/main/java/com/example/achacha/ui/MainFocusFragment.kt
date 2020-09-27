@@ -2,6 +2,7 @@ package com.example.achacha.ui
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,6 @@ import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.helpers.WorkManager
 import com.example.helpers.CustomTimer
 import com.example.helpers.PreferencesManager
-import com.orhanobut.logger.Logger
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -206,7 +206,7 @@ class MainFocusFragment : Fragment()
         try {
             // note. check mainFocus non-null
             val mainFocus = PreferencesManager(activity!!, WORK)[MAIN_FOCUS]
-            Logger.i("mainFocus:$mainFocus")
+            Log.i(TAG, "mainFocus:$mainFocus")
 
             if (mainFocus.isNullOrBlank()) {
                 mainFragment__body_QnA_container.visibility = View.VISIBLE
@@ -260,7 +260,7 @@ class MainFocusFragment : Fragment()
     // note. @listener
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         
-        Logger.i("actionId:$actionId, event:$event")
+        Log.i(TAG, "actionId:$actionId, event:$event")
 
         try {
             when (v!!.id) {
@@ -285,7 +285,7 @@ class MainFocusFragment : Fragment()
 
     override fun onCheckedChanged(v: CompoundButton, isChecked: Boolean) {
         
-        Logger.i("${resources.getResourceEntryName(v.id)}")
+        Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__body_focus_contents_checkbox -> {
                 if (isChecked) {
@@ -299,7 +299,7 @@ class MainFocusFragment : Fragment()
 
     override fun onClick(v: View) {
         
-        Logger.i("${resources.getResourceEntryName(v.id)}")
+        Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__header_clear_button -> {
                 WorkManager.clearMainFocus(activity!!)
@@ -317,7 +317,7 @@ class MainFocusFragment : Fragment()
 
     override fun print(year: Int, hours: Int, minutes: Int) {
 //        
-//        Logger.i("year:$year, hours:$hours, minutes:$minutes")
+//        Log.i("year:$year, hours:$hours, minutes:$minutes")
 
         // note. for current time
         handler.post {

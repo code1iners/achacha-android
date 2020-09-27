@@ -1,6 +1,7 @@
 package com.example.achacha.helpers
 
 import android.app.Activity
+import android.util.Log
 import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.CATEGORY
 import com.example.achacha.helpers.Protocol.WORK
@@ -8,15 +9,16 @@ import com.example.achacha.models.CategoryModel
 import com.example.helpers.PreferencesManager
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import com.orhanobut.logger.Logger
 import org.json.JSONArray
 import org.json.JSONObject
 import org.threeten.bp.LocalDateTime
 
 class CategoryManager {
   companion object {
+    val TAG = CategoryManager::class.simpleName
+
     fun createCategory(activity: Activity, pk: Int, category: String): JSONObject {
-      Logger.i("pk:$pk, category:$category")
+      Log.i(TAG, "pk:$pk, category:$category")
       val created = LocalDateTime.now()
       val arr = readCategoryAllAsJsonArray(activity)
       val result = JSONObject()

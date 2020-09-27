@@ -19,7 +19,6 @@ import com.example.achacha.helpers.Protocol.STATUS_OK
 import com.example.achacha.helpers.Protocol.TITLE
 import com.example.achacha.helpers.Protocol.VALUE
 import com.example.helpers.Keypad
-import com.orhanobut.logger.Logger
 
 class EditorActivity : AppCompatActivity()
   , TextView.OnEditorActionListener
@@ -54,7 +53,7 @@ class EditorActivity : AppCompatActivity()
     try {
       intent?.let {
         title = it.getStringExtra(TITLE)
-        Logger.i("title:$title")
+        Log.i(TAG, "title:$title")
       }
     } catch (e: Exception) {e.printStackTrace()}
   }
@@ -100,7 +99,7 @@ class EditorActivity : AppCompatActivity()
 
   override fun onClick(v: View) {
     
-    Logger.i(resources.getResourceEntryName(v.id))
+    Log.i(TAG, resources.getResourceEntryName(v.id))
     when (v.id) {
       R.id.editorActivity__footer_confirm -> {
         finishWithResult()
@@ -114,7 +113,7 @@ class EditorActivity : AppCompatActivity()
 
   override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
     
-    Logger.i("${resources.getResourceEntryName(v.id)}")
+    Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
     when (v.id) {
       R.id.editorActivity__body_editor -> {
         when (actionId) {

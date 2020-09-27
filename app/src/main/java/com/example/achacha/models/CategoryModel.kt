@@ -1,6 +1,6 @@
 package com.example.achacha.models
 
-import com.orhanobut.logger.Logger
+import android.util.Log
 
 class CategoryModel {
   var pk: Int = -1
@@ -9,10 +9,14 @@ class CategoryModel {
   var updated: String? = null
 
   fun log() {
-    Logger.i("pk:${this.pk}" +
+    Log.i(TAG, "pk:${this.pk}" +
         "\ncategory:${this.category}" +
         "\ncreated:${this.created}" +
         "\nupdated:${this.updated}"
     )
+  }
+
+  companion object {
+    val TAG = CategoryModel::class.simpleName
   }
 }

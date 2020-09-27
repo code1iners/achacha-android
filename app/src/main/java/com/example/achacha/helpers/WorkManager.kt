@@ -1,6 +1,7 @@
 package com.example.achacha.helpers
 
 import android.app.Activity
+import android.util.Log
 import com.example.achacha.helpers.Protocol.MAIN_FOCUS
 import com.example.helpers.PreferencesManager
 import com.example.achacha.helpers.Protocol.TODO
@@ -8,13 +9,13 @@ import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.models.TodoModel
 import com.example.helpers.PasswordGenerator
 import com.google.gson.Gson
-import com.orhanobut.logger.Logger
 import org.json.JSONArray
 import org.json.JSONObject
 import org.threeten.bp.LocalDateTime
 
 class WorkManager {
     companion object {
+        val TAG = WorkManager::class.simpleName
 
         // note. todo
         fun createTodo(activity: Activity, mapData: HashMap<String, String>): TodoModel? {
@@ -48,7 +49,7 @@ class WorkManager {
 
         fun readTodo(activity: Activity): JSONArray {
             PreferencesManager(activity, WORK)[TODO]?.run {
-                Logger.i("todoAsString:$this")
+                Log.i(TAG, "todoAsString:$this")
                 return JSONArray(this)
             }
             return JSONArray()

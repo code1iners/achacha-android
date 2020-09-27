@@ -14,7 +14,6 @@ import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
 import com.example.helpers.PreferencesManager
-import com.orhanobut.logger.Logger
 
 class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
 

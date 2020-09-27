@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +31,6 @@ import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
 import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
 import com.google.gson.Gson
-import com.orhanobut.logger.Logger
 import org.json.JSONArray
 import org.threeten.bp.LocalDateTime
 import kotlin.collections.ArrayList
@@ -74,6 +74,7 @@ class TodoFragment : Fragment()
         init(v)
         getData()
         display()
+        refresh()
 
         return v
     }
@@ -83,7 +84,7 @@ class TodoFragment : Fragment()
             val arr= WorkManager.readTodo(activity!!)
             for (idx in 0 until arr.length()) {
                 val obj = arr.getJSONObject(idx)
-                Logger.d("obj:$obj")
+                Log.d(TAG, "obj:$obj")
                 val model = Gson().fromJson(obj.toString(), TodoModel::class.java)
                 todos.add(model)
                 todoAdapter.notifyItemInserted(idx)
@@ -99,6 +100,24 @@ class TodoFragment : Fragment()
         } else {
             toDoFragment__body_list_container.visibility = View.VISIBLE
             toDoFragment__body_blank_container.visibility = View.GONE
+        }
+    }
+
+    private fun refresh() {
+        Log.i("TAG", "asdfasdf")
+        val temp = todos
+        Log.i(TAG, "todosSize:${todos.size}")
+        todos.clear()
+        todoAdapter.notifyDataSetChanged()
+        Log.i(TAG, "todosSize:${todos.size}")
+        var idx = 0
+        for (todo in temp) {
+            if (todo.category == toDoFragment__header_kind.selectedItem) {
+                todo.log()
+                todos.add(todo)
+                todoAdapter.notifyItemInserted(idx)
+                idx++
+            }
         }
     }
 
@@ -169,7 +188,7 @@ class TodoFragment : Fragment()
 
     private fun initCategories() {
         var arr = readCategoryAllAsJsonArray(activity!!)
-        Logger.i("arrayLength:$${arr.length()}")
+        Log.i(TAG, "arrayLength:$${arr.length()}")
 
         // note. check non null
         if (arr.length() == 0) arr.put(createCategory(activity!!, 0, "Today"))
@@ -177,7 +196,7 @@ class TodoFragment : Fragment()
         // note. check new list item
         val newList = readCategoryAsJsonObject(activity!!, resources.getString(R.string.kind_new_list))
         if (newList == null) arr.put(createCategory(activity!!, 1, resources.getString(R.string.kind_new_list)))
-        Logger.i("arr:$arr")
+        Log.i(TAG, "arr:$arr")
 
         // note. set category list
         for (idx in 0 until arr.length()) {
@@ -201,7 +220,7 @@ class TodoFragment : Fragment()
         mapData["category"] = toDoFragment__header_kind.selectedItem.toString()
         mapData["categoryPosition"] = toDoFragment__header_kind.selectedItemPosition.toString()
         mapData["value"] = toDoFragment__body_editor_writer.text.toString()
-        Logger.i("mapData:${mapData.entries}")
+        Log.i(TAG,"mapData:${mapData.entries}")
         val model = WorkManager.createTodo(activity!!, mapData)
         model?.run {
             todos.add(this)
@@ -215,17 +234,17 @@ class TodoFragment : Fragment()
     }
 
     fun resetCategories() {
-        Logger.i("categoriesSize:${categories.size}")
+        Log.i(TAG,"categoriesSize:${categories.size}")
         categories.clear()
         listOfSpinner.clear()
         initCategories()
         spinnerAdapter.notifyDataSetChanged()
-        Logger.i("categoriesSize:${categories.size}")
+        Log.i(TAG,"categoriesSize:${categories.size}")
 
     }
 
     override fun onClick(v: View) {
-        Logger.i(resources.getResourceEntryName(v.id))
+        Log.i(TAG, resources.getResourceEntryName(v.id))
         when (v.id) {
             R.id.toDoFragment__body_editor_submit -> {
                 createTodo()
@@ -234,7 +253,7 @@ class TodoFragment : Fragment()
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        Logger.i("actionId:$actionId")
+        Log.i(TAG, "actionId:$actionId")
         try {
             when (v!!.id) {
                 R.id.toDoFragment__body_editor_writer -> {
@@ -252,12 +271,12 @@ class TodoFragment : Fragment()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        Logger.w("requestCode:$requestCode, resultCode:$resultCode, data:$data")
+        Log.w(TAG, "requestCode:$requestCode, resultCode:$resultCode, data:$data")
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 REQUEST_CODE_EDITOR_ACTIVITY -> {
                     val status = data?.getIntExtra(STATUS, -1)
-                    Logger.i("status:$status")
+                    Log.i(TAG, "status:$status")
                     if (status == -1) return
 
                     val value = data?.getStringExtra(VALUE)
@@ -266,7 +285,7 @@ class TodoFragment : Fragment()
                         STATUS_OK -> {
                             try {
                                 value?.let {
-                                    Logger.e("categoriesLastIndex:${categories.lastIndex}, size:${categories.size}")
+                                    Log.e(TAG, "categoriesLastIndex:${categories.lastIndex}, size:${categories.size}")
                                     val obj = createCategory(activity!!, categories.lastIndex, it)
                                     val m = Gson().fromJson(obj.toString(), CategoryModel::class.java)
                                     m.log()
@@ -293,41 +312,13 @@ class TodoFragment : Fragment()
         }
     }
 
-    private fun addTodoKinds(array: Array<String?>, value: String?): Array<String?> {
-
-        Logger.i("array:$array, value:$value")
-
-        var lastIndex = -1
-        val resultArray = arrayOfNulls<String>(array.size + 1)
-        Logger.i("resultArraySize:${resultArray.size}")
-
-        try {
-            for ((idx, value) in array.withIndex()) {
-                if (idx == array.size - 1) {
-                    lastIndex++
-                    break
-                }
-                Logger.v("idx:$idx, value:$value")
-                resultArray[idx] = value
-                lastIndex++
-            }
-
-            resultArray[lastIndex] = resources.getString(R.string.kind_new_list)
-        } catch (e: Exception) {e.printStackTrace()}
-
-        Logger.d("resultArray:$resultArray")
-
-        return resultArray
-    }
-
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
         try {
-            Logger.i("position:$position, id:$id, parent:${parent?.id}")
+            Log.i(TAG, "position:$position, id:$id, parent:${parent?.id}")
 
             parent?.let {
                 selectedKind = it.selectedItem.toString()
-                Logger.i("selectedItem:${it.selectedItem}")
+                Log.i(TAG, "selectedItem:${it.selectedItem}")
                 when (it.id) {
                     R.id.toDoFragment__header_kind -> {
                         when (selectedKind) {
@@ -337,6 +328,10 @@ class TodoFragment : Fragment()
                                 startActivityForResult(editorActivity, REQUEST_CODE_EDITOR_ACTIVITY)
                             }
                         }
+                    }
+
+                    else -> {
+                        refresh()
                     }
                 }
             }
@@ -348,20 +343,25 @@ class TodoFragment : Fragment()
     }
 
     override fun todoDelete(p: Int) {
-        // note. delete real data
-        deleteTodo(activity!!, p)
-        // note. delete ui
-        todos.removeAt(p)
-        todoAdapter.notifyItemRemoved(p)
+        try {
+            // note. delete real data
+            deleteTodo(activity!!, p)
+            // note. delete ui
+            todos.removeAt(p)
+            todoAdapter.notifyItemRemoved(p)
 
-        display()
+            display()
+
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     override fun todoUpdate(h: TodoAdapter.CustomViewHolder, p: Int, m: TodoModel) {
-        WorkManager.updateTodo(activity!!, p, m.apply {
-            value = h.todosRecyclerView_todo_write_mode?.text.toString()
-            updated = LocalDateTime.now().toString()
-        })
+        try {
+            WorkManager.updateTodo(activity!!, p, m.apply {
+                value = h.todosRecyclerView_todo_write_mode?.text.toString()
+                updated = LocalDateTime.now().toString()
+            })
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     // note. @companion object

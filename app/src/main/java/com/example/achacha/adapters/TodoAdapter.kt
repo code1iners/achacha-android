@@ -2,6 +2,7 @@ package com.example.achacha.adapters
 
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.achacha.R
 import com.example.achacha.models.TodoModel
-import com.orhanobut.logger.Logger
 
 class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 
@@ -39,7 +39,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
         }
 
         override fun onClick(v: View) {
-            Logger.i(context.resources.getResourceEntryName(v.id))
+            Log.i(TAG, context.resources.getResourceEntryName(v.id))
             val p = adapterPosition
             val h = this
             when (v.id) {
@@ -75,13 +75,13 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
         }
 
         override fun onCheckedChanged(v: CompoundButton, b: Boolean) {
-            Logger.i(context.resources.getResourceEntryName(v.id))
+            Log.i(TAG, context.resources.getResourceEntryName(v.id))
             when (v.id) {
                 R.id.todosRecyclerView_check -> {
                     if (b) {
-                        Logger.d("status:true")
+                        Log.d(TAG, "status:true")
                     } else {
-                        Logger.d("status:false")
+                        Log.d(TAG, "status:false")
                     }
                 }
             }
@@ -103,6 +103,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 
     private fun applyData(h: TodoAdapter.CustomViewHolder, m: TodoModel) {
         h.todosRecyclerView_todo_read_mode?.text = m.value
+
     }
 
     override fun getItemCount(): Int { return todos.size }
@@ -110,6 +111,10 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
     interface OnTodoListener {
         fun todoDelete(p: Int)
         fun todoUpdate(h: CustomViewHolder, p: Int, m: TodoModel)
+    }
+
+    companion object {
+        val TAG = TodoAdapter::class.simpleName
     }
 
 }

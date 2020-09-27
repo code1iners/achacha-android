@@ -13,7 +13,7 @@ class TodoModel {
     var key: String? = null
 
     fun log() {
-        Log.i(TAG, "category:$category\n" +
+        Log.i(TAG, "\ncategory:$category\n" +
             "categoryPosition:$categoryPosition\n" +
             "value:$value\n" +
             "status:$status\n" +

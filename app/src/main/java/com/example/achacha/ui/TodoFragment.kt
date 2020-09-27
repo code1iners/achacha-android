@@ -18,7 +18,6 @@ import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
 import com.example.achacha.helpers.CategoryManager.Companion.createCategoryAsJsonObject
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAllAsJsonArray
-import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAsJsonObject
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.REQUEST_CODE_EDITOR_ACTIVITY
 import com.example.achacha.helpers.Protocol.STATUS
@@ -44,7 +43,7 @@ class TodoFragment : Fragment()
     , TodoAdapter.OnTodoListener {
 
     // note. widgets
-    private lateinit var toDoFragment__header_kind: Spinner
+    private lateinit var toDoFragment__header_spinner: Spinner
     private lateinit var toDoFragment__header_option: ImageButton
     private lateinit var toDoFragment__body_editor_writer: EditText
     private lateinit var toDoFragment__body_editor_submit: Button
@@ -72,28 +71,17 @@ class TodoFragment : Fragment()
         val v = inflater.inflate(R.layout.fragment_to_do, container, false)
 
         init(v)
-        getData()
-        display()
-        refresh()
+        // note. refresh to do list
+        refreshTodos()
+        // note. refresh categories & spinner list
+        refreshCategories()
 
         return v
     }
 
-    private fun getData() {
-        try {
-            val arr= WorkManager.readTodo(activity!!)
-            for (idx in 0 until arr.length()) {
-                val obj = arr.getJSONObject(idx)
-                Log.d(TAG, "obj:$obj")
-                val model = Gson().fromJson(obj.toString(), TodoModel::class.java)
-                todos.add(model)
-                todoAdapter.notifyItemInserted(idx)
-            }
-
-        } catch (e: Exception) {e.printStackTrace()}
-    }
-
-    private fun display() {
+    private fun displayTodos() {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        Log.i(TAG, "todosSize:${todos.size}")
         if (todos.size == 0) {
             toDoFragment__body_list_container.visibility = View.GONE
             toDoFragment__body_blank_container.visibility = View.VISIBLE
@@ -103,22 +91,26 @@ class TodoFragment : Fragment()
         }
     }
 
-    private fun refresh() {
+    private fun refreshTodos() {
         Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
-        val temp = todos
-        Log.i(TAG, "todosSize:${todos.size}")
-        todos.clear()
-        todoAdapter.notifyDataSetChanged()
-        Log.i(TAG, "todosSize:${todos.size}")
-        var idx = 0
-        for (todo in temp) {
-            if (todo.category == toDoFragment__header_kind.selectedItem) {
-                todo.log()
-                todos.add(todo)
-                todoAdapter.notifyItemInserted(idx)
-                idx++
+        try {
+            todos.clear()
+            val array = WorkManager.readTodos(activity!!)
+            for (idx in 0 until array.length()) {
+                val todo = Gson().fromJson(array.getJSONObject(idx).toString(), TodoModel::class.java)
+                Log.e(TAG, "category:${todo.category}, selectedItem:${toDoFragment__header_spinner.selectedItem}")
+                if (todo.category == toDoFragment__header_spinner.selectedItem) {
+                    Log.i(TAG, "entered in")
+                    todos.add(todo)
+                }
             }
-        }
+
+            todoAdapter.notifyDataSetChanged()
+
+            // note. display to do data
+            displayTodos()
+
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun init(v: View) {
@@ -134,8 +126,8 @@ class TodoFragment : Fragment()
     }
 
     private fun initWidgets(v: View) {
-        toDoFragment__header_kind = v.findViewById(R.id.toDoFragment__header_kind)
-        toDoFragment__header_kind.onItemSelectedListener = this
+        toDoFragment__header_spinner = v.findViewById(R.id.toDoFragment__header_spinner)
+        toDoFragment__header_spinner.onItemSelectedListener = this
 
         toDoFragment__header_option = v.findViewById(R.id.toDoFragment__header_option)
         toDoFragment__body_editor_writer = v.findViewById(R.id.toDoFragment__body_editor_writer)
@@ -175,20 +167,19 @@ class TodoFragment : Fragment()
 
     private fun initSpinnerAdapter() {
         try {
-            // note. init categories & spinner list
-            initCategories()
-
             // note. set adapter
             spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerList)
-            toDoFragment__header_kind.adapter = spinnerAdapter
-            spinnerAdapter.notifyDataSetChanged()
+            toDoFragment__header_spinner.adapter = spinnerAdapter
 
         } catch (e: Exception) {e.printStackTrace()}
     }
 
-    private fun initCategories() {
+    private fun refreshCategories() {
         Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
         try {
+            categories.clear()
+            spinnerList.clear()
+
             val categoriesAsJsonArray = readCategoryAllAsJsonArray(activity!!)
             Log.i(TAG, "size:${categoriesAsJsonArray?.length()}, array:${categoriesAsJsonArray.toString()}")
 
@@ -213,8 +204,10 @@ class TodoFragment : Fragment()
                 item.category?.let {
                     item.log()
                     spinnerList.add(it)
+
                 }
             }
+            spinnerAdapter.notifyDataSetChanged()
 
         } catch (e: Exception) {e.printStackTrace()}
 
@@ -222,8 +215,8 @@ class TodoFragment : Fragment()
 
     private fun createTodo() {
         val mapData: HashMap<String, String> = HashMap()
-        mapData["category"] = toDoFragment__header_kind.selectedItem.toString()
-        mapData["categoryPosition"] = toDoFragment__header_kind.selectedItemPosition.toString()
+        mapData["category"] = toDoFragment__header_spinner.selectedItem.toString()
+        mapData["categoryPosition"] = toDoFragment__header_spinner.selectedItemPosition.toString()
         mapData["value"] = toDoFragment__body_editor_writer.text.toString()
         Log.i(TAG,"mapData:${mapData.entries}")
         val model = WorkManager.createTodo(activity!!, mapData)
@@ -235,14 +228,14 @@ class TodoFragment : Fragment()
         // note. clear focus
         toDoFragment__body_editor_writer.setText(BLANK)
 
-        display()
+        displayTodos()
     }
 
     fun resetCategories() {
         Log.i(TAG,"categoriesSize:${categories.size}")
         categories.clear()
         spinnerList.clear()
-        initCategories()
+        refreshCategories()
         spinnerAdapter.notifyDataSetChanged()
         Log.i(TAG,"categoriesSize:${categories.size}")
 
@@ -275,7 +268,7 @@ class TodoFragment : Fragment()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
         Log.w(TAG, "requestCode:$requestCode, resultCode:$resultCode, data:$data")
         if (resultCode == RESULT_OK) {
             when (requestCode) {
@@ -291,25 +284,21 @@ class TodoFragment : Fragment()
                             try {
                                 value?.let {
                                     Log.e(TAG, "categoriesLastIndex:${categories.lastIndex}, size:${categories.size}")
+                                    // note. create category
                                     val obj = createCategoryAsJsonObject(activity!!, categories.size, it)
-                                    val m = Gson().fromJson(obj.toString(), CategoryModel::class.java)
-                                    m.log()
-                                    categories.add(m)
-                                    m.category?.run {
-                                        spinnerList.add(this)
-                                        spinnerAdapter.notifyDataSetChanged()
-                                    }
 
-                                    toDoFragment__header_kind.setSelection(0)
+                                    // note. refresh categories
+                                    refreshCategories()
+
+                                    selectSpinnerItem(spinnerList.lastIndex - 1)
                                 }
-
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                         }
 
                         STATUS_NOT_FOUND -> {
-                            toDoFragment__header_kind.setSelection(0)
+                            selectSpinnerItem(0)
                         }
                     }
                 }
@@ -317,7 +306,19 @@ class TodoFragment : Fragment()
         }
     }
 
+    private fun selectSpinnerItem(position: Int) {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        try {
+            // note. select item
+            toDoFragment__header_spinner.setSelection(position)
+
+            // note. call selected item method
+            onItemSelected(toDoFragment__header_spinner, null, position, toDoFragment__header_spinner.adapter.getItemId(position))
+        } catch (e: Exception) {e.printStackTrace()}
+    }
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
         try {
             Log.i(TAG, "position:$position, id:$id, parent:${parent?.id}")
 
@@ -325,18 +326,18 @@ class TodoFragment : Fragment()
                 selectedKind = it.selectedItem.toString()
                 Log.i(TAG, "selectedItem:${it.selectedItem}")
                 when (it.id) {
-                    R.id.toDoFragment__header_kind -> {
+                    R.id.toDoFragment__header_spinner -> {
                         when (selectedKind) {
                             resources.getString(R.string.kind_new_list) -> {
                                 val editorActivity = Intent(activity, EditorActivity::class.java)
                                 editorActivity.putExtra(TITLE, "New kind list")
                                 startActivityForResult(editorActivity, REQUEST_CODE_EDITOR_ACTIVITY)
                             }
-                        }
-                    }
 
-                    else -> {
-                        refresh()
+                            else -> {
+                                refreshTodos()
+                            }
+                        }
                     }
                 }
             }
@@ -355,7 +356,7 @@ class TodoFragment : Fragment()
             todos.removeAt(p)
             todoAdapter.notifyItemRemoved(p)
 
-            display()
+            displayTodos()
 
         } catch (e: Exception) {e.printStackTrace()}
     }

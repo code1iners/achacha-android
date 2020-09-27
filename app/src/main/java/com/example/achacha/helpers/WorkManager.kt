@@ -34,7 +34,7 @@ class WorkManager {
                 }
                 model.log()
 
-                val arr = readTodo(activity)
+                val arr = readTodos(activity)
                 // note. model to jsonObject
                 arr.put(model.toJson())
                 PreferencesManager(activity, WORK).add(TODO, arr.toString())
@@ -47,7 +47,7 @@ class WorkManager {
             }
         }
 
-        fun readTodo(activity: Activity): JSONArray {
+        fun readTodos(activity: Activity): JSONArray {
             PreferencesManager(activity, WORK)[TODO]?.run {
                 Log.i(TAG, "todoAsString:$this")
                 return JSONArray(this)
@@ -56,13 +56,13 @@ class WorkManager {
         }
 
         fun updateTodo(activity: Activity, position: Int, model: TodoModel) {
-            val arr = readTodo(activity)
+            val arr = readTodos(activity)
             arr.put(position, Gson().toJson(model))
             PreferencesManager(activity, WORK).add(TODO, arr.toString())
         }
 
         fun deleteTodo(activity: Activity, position: Int) {
-            val arr = readTodo(activity)
+            val arr = readTodos(activity)
             arr.remove(position)
             PreferencesManager(activity, WORK).add(TODO, arr.toString())
         }

@@ -11,8 +11,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.example.achacha.R
-import com.example.achacha.helpers.CategoryManager
-import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.STATUS
 import com.example.achacha.helpers.Protocol.STATUS_NOT_FOUND
 import com.example.achacha.helpers.Protocol.STATUS_OK

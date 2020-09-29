@@ -9,15 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.Fragment
 import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.helpers.CategoryManager
-import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.MAIN_FOCUS
-import com.example.achacha.helpers.Protocol.TODO
 import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.helpers.WorkManager
 import com.example.helpers.CustomTimer
@@ -302,11 +299,11 @@ class MainFocusFragment : Fragment()
         Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__header_clear_button -> {
-                WorkManager.clearMainFocus(activity!!)
-                CategoryManager.clearCategory(activity!!)
-
-                val fragment = MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
-                fragment.resetCategories()
+//                WorkManager.clearMainFocus(activity!!)
+//                CategoryManager.clearCategory(activity!!)
+//
+//                val fragment = MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
+//                fragment.resetCategories()
             }
 
             R.id.mainFragment__body_focus_contents_delete -> {

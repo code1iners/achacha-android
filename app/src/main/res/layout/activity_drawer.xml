@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_view"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_gravity="start"
+    android:layout_width="280dp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/drawerView__title_container"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="SETTINGS"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/sexyBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/drawerView_body_container"
+        android:paddingHorizontal="20dp"
+        android:layout_below="@+id/drawerView__title_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/drawerView__data_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:background="@drawable/border_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:text="DATA"
+                    android:textSize="16sp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/drawerView__data_clear_container"
+                android:background="@drawable/btn_rounded_5_blue"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <View
+                    android:background="@color/sexyGray3"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+                <TextView
+                    android:id="@+id/drawerView__data_clear_button"
+                    android:text="INITIALIZE"
+                    android:textSize="16sp"
+                    android:textColor="@color/sexyBlack"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:src="@drawable/arrow_003_r"
+                    android:scaleType="fitCenter"
+                    android:background="@null"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:contentDescription="TODO" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawerView__options_container"
+            android:layout_below="@+id/drawerView__data_container"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:background="@drawable/border_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:text="OPTIONS"
+                    android:textSize="16sp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/drawerView__options_darkMode_container"
+                android:background="@drawable/btn_rounded_5_blue"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <View
+                    android:background="@color/sexyGray3"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+                <TextView
+                    android:text="DARK MODE"
+                    android:textSize="16sp"
+                    android:textColor="@color/sexyBlack"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <CheckBox
+                    android:id="@+id/drawerView__options_darkMode_trigger"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawerView__etc_container"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:background="@drawable/border_top"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="ETC"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:background="@drawable/border_top"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="REPORT TO ADMIN"
+                    android:textSize="16sp"
+                    android:textColor="@color/sexyBlack"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:src="@drawable/arrow_003_r"
+                    android:scaleType="fitCenter"
+                    android:background="@null"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

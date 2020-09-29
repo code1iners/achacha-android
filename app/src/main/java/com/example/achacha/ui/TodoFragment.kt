@@ -11,9 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
 import com.example.achacha.helpers.CategoryManager.Companion.createCategoryAsJsonObject
@@ -30,7 +32,6 @@ import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
 import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
 import com.google.gson.Gson
-import org.json.JSONArray
 import org.threeten.bp.LocalDateTime
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -68,7 +69,7 @@ class TodoFragment : Fragment()
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_to_do, container, false)
+        val v = inflater.inflate(R.layout.fragment_todo, container, false)
 
         init(v)
         // note. refresh to do list
@@ -116,6 +117,7 @@ class TodoFragment : Fragment()
     private fun init(v: View) {
         initVars()
         initWidgets(v)
+        initNavigations()
         initAdapters()
     }
 
@@ -126,10 +128,17 @@ class TodoFragment : Fragment()
     }
 
     private fun initWidgets(v: View) {
+
+        // note. # header
+        // note. spinner
         toDoFragment__header_spinner = v.findViewById(R.id.toDoFragment__header_spinner)
         toDoFragment__header_spinner.onItemSelectedListener = this
-
+        // note. options
         toDoFragment__header_option = v.findViewById(R.id.toDoFragment__header_option)
+        toDoFragment__header_option.setOnClickListener(this)
+
+        // note. # body
+        // note. editor
         toDoFragment__body_editor_writer = v.findViewById(R.id.toDoFragment__body_editor_writer)
         toDoFragment__body_editor_submit = v.findViewById(R.id.toDoFragment__body_editor_submit)
         toDoFragment__body_list_container = v.findViewById(R.id.toDoFragment__body_list_container)
@@ -145,6 +154,10 @@ class TodoFragment : Fragment()
         // note. listeners
         toDoFragment__body_editor_writer.setOnEditorActionListener(this)
         toDoFragment__body_editor_submit.setOnClickListener(this)
+    }
+
+    private fun initNavigations() {
+
     }
 
     private fun initAdapters() {
@@ -241,16 +254,34 @@ class TodoFragment : Fragment()
 
     }
 
+    fun resetTodos() {
+        todos.clear()
+        todoAdapter.notifyDataSetChanged()
+    }
+
     override fun onClick(v: View) {
         Log.i(TAG, resources.getResourceEntryName(v.id))
         when (v.id) {
             R.id.toDoFragment__body_editor_submit -> {
                 createTodo()
             }
+
+            R.id.toDoFragment__header_option -> {
+                openMenu()
+            }
         }
     }
 
+    private fun openMenu() {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        try {
+            MainActivity.openMenu()
+        } catch (e: Exception) {e.printStackTrace()}
+//        val menuActivity = Intent
+    }
+
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
         Log.i(TAG, "actionId:$actionId")
         try {
             when (v!!.id) {

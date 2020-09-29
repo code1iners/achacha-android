@@ -9,8 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".ui.EditorActivity"></activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".ui.MenuActivity"
+            android:label="@string/title_activity_menu"
+            android:theme="@style/NoActionBar.NoActionBar"></activity>
+        <activity android:name=".ui.EditorActivity" />
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

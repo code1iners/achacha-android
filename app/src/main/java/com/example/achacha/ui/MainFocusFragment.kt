@@ -29,7 +29,6 @@ class MainFocusFragment : Fragment()
     , CompoundButton.OnCheckedChangeListener {
 
     // note. widgets-header
-    lateinit var mainFragment__header_clear_button: Button  // note. for test
     lateinit var mainFragment__header_container: LinearLayout
     lateinit var mainFragment__header_timer_hours: TextView
     lateinit var mainFragment__header_timer_minutes: TextView
@@ -95,9 +94,6 @@ class MainFocusFragment : Fragment()
     private fun initWidgets(v: View) {
         
         try {
-            // note. for test
-            mainFragment__header_clear_button = v.findViewById(R.id.mainFragment__header_clear_button)
-            mainFragment__header_clear_button.setOnClickListener(this)
             // note. assignment
             mainFragment__header_container = v.findViewById(R.id.mainFragment__header_container)
             mainFragment__header_timer_hours = v.findViewById(R.id.mainFragment__header_timer_hours)
@@ -225,13 +221,21 @@ class MainFocusFragment : Fragment()
     private fun deleteMainFocus() {
         
         try {
-            // note. delete main focus
-            PreferencesManager(activity!!, WORK).remove(MAIN_FOCUS)
-            // note. change UI
-            refreshBodyUI()
+            resetMainFocus()
+//            // note. delete main focus
+//            PreferencesManager(activity!!, WORK).remove(MAIN_FOCUS)
+//            // note. change UI
+//            refreshBodyUI()
             // note. clear widgets
             mainFragment__body_focus_contents_data.text = BLANK
             mainFragment__body_focus_contents_checkbox.isChecked = false
+        } catch (e: Exception) {e.printStackTrace()}
+    }
+
+    fun resetMainFocus() {
+        try {
+            WorkManager.clearMainFocus(activity!!)
+            refreshBodyUI()
         } catch (e: Exception) {e.printStackTrace()}
     }
 
@@ -298,14 +302,6 @@ class MainFocusFragment : Fragment()
         
         Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
-            R.id.mainFragment__header_clear_button -> {
-//                WorkManager.clearMainFocus(activity!!)
-//                CategoryManager.clearCategory(activity!!)
-//
-//                val fragment = MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
-//                fragment.resetCategories()
-            }
-
             R.id.mainFragment__body_focus_contents_delete -> {
                 deleteMainFocus()
             }

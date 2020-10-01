@@ -167,11 +167,11 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/drawerView__etc_report_container"
                 android:background="@drawable/border_top"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="50dp">
 
                 <TextView
                     android:text="REPORT TO ADMIN"

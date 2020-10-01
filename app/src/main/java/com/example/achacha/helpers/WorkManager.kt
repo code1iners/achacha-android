@@ -74,7 +74,7 @@ class WorkManager {
 
         fun clearMainFocus(activity: Activity) {
             PreferencesManager(activity, WORK).remove(MAIN_FOCUS)
-            PreferencesManager(activity, WORK).remove(TODO)
+//            PreferencesManager(activity, WORK).remove(TODO)
         }
     }
 }

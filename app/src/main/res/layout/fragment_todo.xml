@@ -75,41 +75,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/toDoFragment__body_blank_title_container"
             android:layout_centerInParent="true"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/toDoFragment__body_blank_title"
                 android:text="@string/guide_blank_title"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/toDoFragment__body_blank_subtitle_container"
-            android:layout_below="@+id/toDoFragment__body_blank_title_container"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/toDoFragment__body_blank_subtitle"
-                android:text="@string/guide_blank_subtitle"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/toDoFragment__body_blank_subtitle_value"
-                android:text="@string/today"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="3dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -117,12 +93,13 @@
                 android:src="@drawable/arrow_003_r"
                 android:scaleType="fitCenter"
                 android:background="@null"
-                android:layout_gravity="center_vertical"
                 android:layout_marginStart="3dp"
+                android:layout_toEndOf="@+id/toDoFragment__body_blank_title"
+                android:layout_centerVertical="true"
                 android:layout_width="12dp"
                 android:layout_height="12dp"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

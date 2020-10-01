@@ -31,6 +31,7 @@ import com.example.achacha.helpers.WorkManager
 import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
 import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
+import com.example.helpers.Keypad
 import com.google.gson.Gson
 import org.threeten.bp.LocalDateTime
 import kotlin.collections.ArrayList
@@ -150,6 +151,7 @@ class TodoFragment : Fragment()
         )
 
         toDoFragment__body_blank_container = v.findViewById(R.id.toDoFragment__body_blank_container)
+        toDoFragment__body_blank_container.setOnClickListener(this)
 
         // note. listeners
         toDoFragment__body_editor_writer.setOnEditorActionListener(this)
@@ -268,6 +270,13 @@ class TodoFragment : Fragment()
 
             R.id.toDoFragment__header_option -> {
                 openMenu()
+            }
+
+            R.id.toDoFragment__body_blank_container -> {
+                toDoFragment__body_editor_writer.requestFocus()
+                try {
+                    Keypad(activity!!).up(toDoFragment__body_editor_writer)
+                } catch (e: Exception) {e.printStackTrace()}
             }
         }
     }

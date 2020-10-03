@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.achacha.helpers.CategoryManager
+import com.example.achacha.helpers.CustomTimerTest
 import com.example.achacha.helpers.Protocol.DARK_MODE
 import com.example.achacha.helpers.Protocol.DISPLAY_MODE
 import com.example.achacha.helpers.Protocol.MAIN_CONTENTS_CONTAINER
@@ -31,6 +32,7 @@ import com.example.helpers.FragmentChanger
 import com.example.helpers.PreferencesManager
 import com.example.helpers.ScreenManager
 import com.jakewharton.threetenabp.AndroidThreeTen
+import java.util.*
 
 
 class MainActivity : AppCompatActivity()
@@ -38,9 +40,12 @@ class MainActivity : AppCompatActivity()
     , View.OnClickListener
     , View.OnTouchListener
     , CompoundButton.OnCheckedChangeListener
+    , CustomTimerTest.CurrentTimer.CurrentTimerListener
 {
     companion object {
         val TAG = MainActivity::class.simpleName
+
+        lateinit var timer: CustomTimerTest.CurrentTimer
 
         // note. navigation-vars
         lateinit var drawerLayout: DrawerLayout
@@ -98,6 +103,10 @@ class MainActivity : AppCompatActivity()
     private fun initVars() {
         usernameIsSetted = BooleanVariable()
         mDayNightMode = AppCompatDelegate.getDefaultNightMode()
+
+        timer = CustomTimerTest.CurrentTimer()
+        timer.currentTimerListener = this
+        timer.start()
     }
 
     private fun initWidgets() {
@@ -304,5 +313,48 @@ class MainActivity : AppCompatActivity()
                 delegate.applyDayNight()
             }
         }
+    }
+
+    override fun print(date: Date) {
+        try {
+            val year = date.year
+            val hours = if (date.hours < 10) "0" + date.hours else date.hours.toString()
+            val minutes = if (date.minutes < 10) "0" + date.minutes else date.minutes.toString()
+            val seconds = if (date.seconds < 10) "0" + date.seconds else date.seconds.toString()
+
+            Log.i(TAG, "year:$year, hours:$hours, minutes:$minutes, seconds:$seconds")
+
+            mainFragment.mainFocusFragment.mainFragment__header_timer_hours.text = hours
+            mainFragment.mainFocusFragment.mainFragment__header_timer_minutes.text = minutes
+
+        } catch (e: Exception) {e.printStackTrace()}
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // note. timer play
+        timer.isPause = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // note. timer pause
+        timer.isPause = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        // note. timer pause
+        timer.isPause = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // note. timer pause
+        timer.isPause = true
     }
 }

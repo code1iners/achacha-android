@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.helpers.CategoryManager
+import com.example.achacha.helpers.CustomTimerTest
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.MAIN_FOCUS
 import com.example.achacha.helpers.Protocol.WORK
@@ -25,7 +26,7 @@ import kotlin.collections.HashMap
 class MainFocusFragment : Fragment()
     , TextView.OnEditorActionListener
     , View.OnClickListener
-    , CustomTimer.CurrentTimer.CurrentTimerListener
+//    , CustomTimer.CurrentTimer.CurrentTimerListener
     , CompoundButton.OnCheckedChangeListener {
 
     // note. widgets-header
@@ -51,7 +52,7 @@ class MainFocusFragment : Fragment()
     lateinit var mainFragment__footer_phrase: TextView
 
     // note. vars-timer
-    lateinit var timer: CustomTimer.CurrentTimer
+//    lateinit var timer: CustomTimerTest.CurrentTimer
     // note. vars-greetings
     lateinit var time: HashMap<String, Int>
     // note. vars
@@ -129,9 +130,10 @@ class MainFocusFragment : Fragment()
     private fun setCurrentTimer() {
         
 
-        timer = CustomTimer.CurrentTimer()
-        timer.currentTimerListener = this
-        timer.start()
+//        timer = CustomTimer.CurrentTimer()
+//        timer = CustomTimerTest.CurrentTimer()
+//        timer.currentTimerListener = this
+//        timer.start()
     }
 
     private fun setGreetings() {
@@ -242,20 +244,20 @@ class MainFocusFragment : Fragment()
     // note. @life-cycle
     override fun onPause() {
         super.onPause()
-//        
-        timer.isPause = true
+
+//        timer.isPause = true
     }
 
     override fun onResume() {
         super.onResume()
-//        
-        timer.isPause = false
+
+//        timer.isPause = false
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        
-        timer.isPause = true
+
+//        timer.isPause = true
     }
 
     // note. @listener
@@ -308,21 +310,21 @@ class MainFocusFragment : Fragment()
         }
     }
 
-    override fun print(year: Int, hours: Int, minutes: Int) {
-//        
-//        Log.i("year:$year, hours:$hours, minutes:$minutes")
-
-        // note. for current time
-        handler.post {
-            mainFragment__header_timer_hours.text = hours.toString()
-            mainFragment__header_timer_minutes.text = minutes.toString()
-        }
-
-        // note. assignment by hash map
-        time["year"] = year
-        time["hours"] = hours
-        time["minutes"] = minutes
-    }
+//    override fun print(year: Int, hours: Int, minutes: Int) {
+////
+////        Log.i("year:$year, hours:$hours, minutes:$minutes")
+//
+//        // note. for current time
+//        handler.post {
+//            mainFragment__header_timer_hours.text = hours.toString()
+//            mainFragment__header_timer_minutes.text = minutes.toString()
+//        }
+//
+//        // note. assignment by hash map
+//        time["year"] = year
+//        time["hours"] = hours
+//        time["minutes"] = minutes
+//    }
 
     // note. @companion object
     companion object {

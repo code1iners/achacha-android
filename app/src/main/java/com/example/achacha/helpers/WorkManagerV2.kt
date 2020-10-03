@@ -81,16 +81,17 @@ class WorkManagerV2 {
       return JSONArray()
     }
 
-    fun deleteTodoByTodo(activity: Activity, todo: TodoModel) {
+    fun deleteTodo(activity: Activity, todo: TodoModel, category: CategoryModel) {
       val todosAsJsonArray = readTodosAsJsonArray(activity)
       if (todosAsJsonArray.length() > 0) {
-        todo.log()  // note. for test
+        todo.log()      // note. for test
+        category.log()  // note. for test
 
         val resultArray = JSONArray()
 
         for (idx in 0 until todosAsJsonArray.length()) {
           val obj = todosAsJsonArray.getJSONObject(idx)
-          if (obj.get("value") == todo.value) continue
+          if (obj.get("category") == category.category && obj.get("value") == todo.value) continue
           resultArray.put(obj)
         }
 

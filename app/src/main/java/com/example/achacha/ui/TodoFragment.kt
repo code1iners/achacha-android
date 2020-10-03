@@ -460,8 +460,11 @@ class TodoFragment : Fragment()
 
     override fun todoDelete(p: Int, todo: TodoModel) {
         try {
+            val selectedCategory = categories[toDoFragment__header_spinner.selectedItemPosition]
+            Log.i(TAG, "selectedCategory:$selectedCategory")
+
             // note. delete real data
-            WorkManagerV2.deleteTodoByTodo(activity!!, todo)
+            WorkManagerV2.deleteTodo(activity!!, todo, selectedCategory)
 
             // note. delete in ui
             todos.removeAt(p)

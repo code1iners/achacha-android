@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.achacha.helpers.CategoryManager
+import com.example.achacha.helpers.Protocol.DARK_MODE
+import com.example.achacha.helpers.Protocol.DISPLAY_MODE
 import com.example.achacha.helpers.Protocol.MAIN_CONTENTS_CONTAINER
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
@@ -145,31 +147,16 @@ class MainActivity : AppCompatActivity()
     }
 
     private fun initDarkMode() {
-        Log.e(TAG, "mDayNightMode:$mDayNightMode")
-        when (mDayNightMode) {
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                changeMode(false)
-            }
+        val status = PreferencesManager(this, DISPLAY_MODE)[DARK_MODE]
+        if (status.isNullOrBlank()) return
 
-            AppCompatDelegate.MODE_NIGHT_YES -> {
-                changeMode(true)
-            }
-        }
+        changeMode(status.toBoolean())
     }
 
     private fun changeMode(isDarkMode: Boolean) {
-        if (isDarkMode) {
-            // note. options-darkMode
-            drawerView__options_darkMode_trigger.isChecked = true
-
-            // note. to do fragment
-        } else {
-            // note. options-darkMode
-            drawerView__options_darkMode_trigger.isChecked = false
-
-//            todofrag
-            // note. to do fragment
-        }
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        Log.i(TAG, "isDarkMode:$isDarkMode")
+        drawerView__options_darkMode_trigger.isChecked = isDarkMode
     }
 
     private fun display() {
@@ -305,8 +292,14 @@ class MainActivity : AppCompatActivity()
             R.id.drawerView__options_darkMode_trigger -> {
                 if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+                    // note. save information in device
+                    PreferencesManager(this, DISPLAY_MODE).add(DARK_MODE, true.toString())
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                    // note. save information in device
+                    PreferencesManager(this, DISPLAY_MODE).add(DARK_MODE, false.toString())
                 }
                 delegate.applyDayNight()
             }

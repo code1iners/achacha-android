@@ -44,6 +44,10 @@ object Protocol {
     // note. mode
     const val WORK = "WORK"
     const val USER_PROFILE = "USER_PROFILE"
+    const val DISPLAY_MODE = "DISPLAY_MODE"
+
+    // note. display mode
+    const val DARK_MODE = "DARK_MODE"
 
     // note. request code
     const val REQUEST_CODE_EDITOR_ACTIVITY = 1000

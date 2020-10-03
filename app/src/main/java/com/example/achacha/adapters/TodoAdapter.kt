@@ -57,7 +57,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
 //                    handler.postDelayed({
 //                        onTodoListener.todoDelete(p)
 //                    }, anim.duration)
-                    onTodoListener.todoDelete(p)
+                    onTodoListener.todoDelete(p, todos[p])
                 }
 
                 R.id.todosRecyclerView_update -> {
@@ -109,7 +109,7 @@ class TodoAdapter : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
     override fun getItemCount(): Int { return todos.size }
 
     interface OnTodoListener {
-        fun todoDelete(p: Int)
+        fun todoDelete(p: Int, m: TodoModel)
         fun todoUpdate(h: CustomViewHolder, p: Int, m: TodoModel)
     }
 

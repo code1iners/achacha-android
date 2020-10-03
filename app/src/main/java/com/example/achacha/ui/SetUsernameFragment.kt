@@ -11,11 +11,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.achacha.MainActivity
 import com.example.achacha.R
+import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
 import com.example.helpers.PreferencesManager
 
 class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
+
+    companion object {
+
+    }
 
     // note. widgets-body
     lateinit var setUsernameFragment__username_answer: EditText
@@ -36,8 +41,6 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun init(v: View) {
-        
-
         initSource()
         initWidgets(v)
     }
@@ -51,8 +54,6 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun initWidgets(v: View) {
-        
-
         // note. assignment
         setUsernameFragment__username_answer = v.findViewById(R.id.setUsernameFragment__username_answer)
 
@@ -62,7 +63,6 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        
         when (actionId) {
             EditorInfo.IME_ACTION_DONE -> {
                 finishWithData(v!!.text.toString())
@@ -73,11 +73,14 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun finishWithData(text: String) {
-        
         try {
             PreferencesManager(activity!!, USER_PROFILE).add(USERNAME, text)
             sourceActivity.username = text
             sourceActivity.usernameIsSetted!!.isBoo = true
+
+            // note. init edit widget
+            setUsernameFragment__username_answer.setText(BLANK)
+            setUsernameFragment__username_answer.clearFocus()
         } catch (e: Exception) {e.printStackTrace()}
     }
 }

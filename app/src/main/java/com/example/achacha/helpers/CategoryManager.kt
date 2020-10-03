@@ -2,13 +2,11 @@ package com.example.achacha.helpers
 
 import android.app.Activity
 import android.util.Log
-import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.CATEGORY
 import com.example.achacha.helpers.Protocol.WORK
 import com.example.achacha.models.CategoryModel
+import com.example.achacha.models.TodoModel
 import com.example.helpers.PreferencesManager
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import org.json.JSONArray
 import org.json.JSONObject
 import org.threeten.bp.LocalDateTime
@@ -45,11 +43,39 @@ class CategoryManager {
       return if (categoriesAsString.isNullOrBlank()) JSONArray() else JSONArray(categoriesAsString)
     }
 
-    fun readCategoryAsJsonObject(activity: Activity, category: String): JSONObject? {
+    fun deleteCategoryById(activity: Activity, model: CategoryModel): JSONObject? {
+      Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+      val categoriesAsString = PreferencesManager(activity, WORK)[CATEGORY]
+      Log.i(TAG, "categoriesAsString:$categoriesAsString")
+      model.log()
 
+      // note. null check
+      if(categoriesAsString.isNullOrBlank()) return null
 
+      // note. get array
+      val array = JSONArray(categoriesAsString)
+      var result: JSONObject? = null
 
-      return null
+      // note. inspections & delete
+      for (idx in 0 until array.length()) {
+        if (array.getJSONObject(idx).get("pk") == model.pk) {
+//          Log.d(TAG, "objPk:${array.getJSONObject(idx).get("pk")}")
+          // note. set result for return
+          result = array.getJSONObject(idx)
+
+          // note. delete by index
+          array.remove(idx)
+          break
+        }
+      }
+
+      // note. delete data
+      PreferencesManager(activity, WORK).remove(CATEGORY)
+
+      // note. save new data in device
+      PreferencesManager(activity, WORK).add(CATEGORY, array.toString())
+
+      return result
     }
 
     fun clearCategory(activity: Activity) {

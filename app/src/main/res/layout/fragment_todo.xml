@@ -18,6 +18,17 @@
             android:layout_height="wrap_content"/>
 
         <ImageButton
+            android:id="@+id/toDoFragment__header_spinner_delete_button"
+            android:src="@drawable/delete_003"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_toEndOf="@+id/toDoFragment__header_spinner"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="2dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+        <ImageButton
             android:id="@+id/toDoFragment__header_option"
             android:src="@drawable/menu_001"
             android:scaleType="fitCenter"

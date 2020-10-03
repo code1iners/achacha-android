@@ -7,13 +7,18 @@ class CategoryModel {
   var category: String? = null
   var created: String? = null
   var updated: String? = null
+  val todos: ArrayList<TodoModel> = ArrayList()
 
   fun log() {
     Log.i(TAG, "\npk:${this.pk}" +
         "\ncategory:${this.category}" +
         "\ncreated:${this.created}" +
-        "\nupdated:${this.updated}"
+        "\nupdated:${this.updated}" +
+        "\ntodosSize:${this.todos.size}"
     )
+    for (todo in this.todos) {
+      Log.i(TAG, "todo:${todo.log()}")
+    }
   }
 
   companion object {

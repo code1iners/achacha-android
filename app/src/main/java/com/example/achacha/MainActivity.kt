@@ -18,6 +18,7 @@ import com.example.achacha.helpers.CategoryManager
 import com.example.achacha.helpers.Protocol.MAIN_CONTENTS_CONTAINER
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
+import com.example.achacha.helpers.UserManager
 import com.example.achacha.helpers.WorkManager
 import com.example.achacha.ui.MainFocusFragment
 import com.example.achacha.ui.MainFragment
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity()
     private fun init() {
         initLibraries()
         initVars()
-        initFragments()
         initWidgets()
         initScreenSettings()
         initListeners()
@@ -120,11 +120,6 @@ class MainActivity : AppCompatActivity()
         drawerView__etc_report_container.setOnClickListener(this)
     }
 
-    private fun initFragments() {
-        mainFragment = MainFragment()
-        setUsernameFragment = SetUsernameFragment()
-    }
-
     private fun initScreenSettings() {
         ScreenManager.alwaysOn(this)
     }
@@ -153,34 +148,58 @@ class MainActivity : AppCompatActivity()
         Log.e(TAG, "mDayNightMode:$mDayNightMode")
         when (mDayNightMode) {
             AppCompatDelegate.MODE_NIGHT_NO -> {
-                drawerView__options_darkMode_trigger.isChecked = false
+                changeMode(false)
             }
 
             AppCompatDelegate.MODE_NIGHT_YES -> {
-                drawerView__options_darkMode_trigger.isChecked = true
+                changeMode(true)
             }
         }
     }
 
-    private fun display() {
-        
+    private fun changeMode(isDarkMode: Boolean) {
+        if (isDarkMode) {
+            // note. options-darkMode
+            drawerView__options_darkMode_trigger.isChecked = true
 
-        if (username.isNullOrBlank())
-        FragmentChanger.replace(
-            supportFragmentManager,
-            MAIN_CONTENTS_CONTAINER,
-            setUsernameFragment,
-            false,
-            null
-        )
-        else
-        FragmentChanger.replace(
-            supportFragmentManager,
-            MAIN_CONTENTS_CONTAINER,
-            mainFragment,
-            false,
-            null
-        )
+            // note. to do fragment
+        } else {
+            // note. options-darkMode
+            drawerView__options_darkMode_trigger.isChecked = false
+
+//            todofrag
+            // note. to do fragment
+        }
+    }
+
+    private fun display() {
+        val fragmentManager = supportFragmentManager
+        for (idx in 0 until fragmentManager.backStackEntryCount) {
+            fragmentManager.popBackStack()
+        }
+
+        mainFragment = MainFragment()
+        setUsernameFragment = SetUsernameFragment()
+
+        if (username.isNullOrBlank()) {
+            FragmentChanger.replace(
+                supportFragmentManager,
+                MAIN_CONTENTS_CONTAINER,
+                setUsernameFragment,
+                false,
+                null
+            )
+        } else {
+            mainFragment = MainFragment()
+
+            FragmentChanger.replace(
+                supportFragmentManager,
+                MAIN_CONTENTS_CONTAINER,
+                mainFragment,
+                false,
+                null
+            )
+        }
     }
 
     // note. @override
@@ -227,17 +246,26 @@ class MainActivity : AppCompatActivity()
                     b.setMessage("초기화된 정보는 다시 되돌릴 수 없습니다. 정말로 진행 하시겠습니까?")
                     b.setNegativeButton("취소") { _, _ -> }
                     b.setPositiveButton("삭제") { _, _ ->
+                        UserManager.clearUser(this)
                         WorkManager.clearMainFocus(this)
+                        WorkManager.clearTodo(this)
                         CategoryManager.clearCategory(this)
 
+                        // note. init username
+                        initUsername()
+
+                        // note. init mainFocus
                         val mainFocus =
                             MainFragment.mainViewPagerAdapter.fragmentCollection[0] as MainFocusFragment
                         mainFocus.resetMainFocus()
 
+                        // note. init to do
                         val todo =
                             MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
                         todo.resetCategories()
                         todo.resetTodos()
+
+                        display()
                     }
                     val d = b.create()
                     d.show()
@@ -268,12 +296,6 @@ class MainActivity : AppCompatActivity()
 ////        }
 ////        recreate()
 //    }
-
-    private fun isDarkTheme(config: Configuration): Boolean {
-        return config.uiMode and
-            Configuration.UI_MODE_NIGHT_MASK ==
-            Configuration.UI_MODE_NIGHT_YES
-    }
 
     override fun onCheckedChanged(v: CompoundButton, isChecked: Boolean) {
         Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)

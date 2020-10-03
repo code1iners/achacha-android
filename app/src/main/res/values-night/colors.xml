@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- note. Custom Color -->
-    <color name="white">#000000</color>
+    <color name="white">#29323c</color>
     <color name="black">#ffffff</color>
     <color name="sexyBlack">#ffffff</color>
     <color name="sexyBlack2">#ffffff</color>
@@ -9,7 +9,7 @@
 
     <color name="sexyGray">#ffffff</color>
     <color name="sexyGray2">#ffffff</color>
-    <color name="sexyGray3">#000000</color>
+    <color name="sexyGray3">#29323c</color>
 
     <color name="kakaoYellow">#FFE504</color>
     <color name="selected_item">#FF9800</color>

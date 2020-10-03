@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,9 @@ import com.example.achacha.R
 import com.example.achacha.adapters.TodoAdapter
 import com.example.achacha.helpers.CategoryManager.Companion.createCategoryAsJsonObject
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAllAsJsonArray
+import com.example.achacha.helpers.CategoryManagerV2
 import com.example.achacha.helpers.Protocol.BLANK
+import com.example.achacha.helpers.Protocol.PENDING
 import com.example.achacha.helpers.Protocol.REQUEST_CODE_EDITOR_ACTIVITY
 import com.example.achacha.helpers.Protocol.STATUS
 import com.example.achacha.helpers.Protocol.STATUS_NOT_FOUND
@@ -29,13 +30,13 @@ import com.example.achacha.helpers.Protocol.TITLE
 import com.example.achacha.helpers.Protocol.VALUE
 import com.example.achacha.helpers.WorkManager
 import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
+import com.example.achacha.helpers.WorkManagerV2
 import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
 import com.example.helpers.Keypad
 import com.google.gson.Gson
 import org.threeten.bp.LocalDateTime
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class TodoFragment : Fragment()
@@ -44,9 +45,12 @@ class TodoFragment : Fragment()
     , AdapterView.OnItemSelectedListener
     , TodoAdapter.OnTodoListener {
 
-    // note. widgets
+    // note. widgets-header
     private lateinit var toDoFragment__header_spinner: Spinner
+    private lateinit var toDoFragment__header_spinner_delete_button: ImageButton
     private lateinit var toDoFragment__header_option: ImageButton
+
+    // note. widgets-body
     private lateinit var toDoFragment__body_editor_writer: EditText
     private lateinit var toDoFragment__body_editor_submit: Button
     private lateinit var toDoFragment__body_list_container: LinearLayout
@@ -135,6 +139,8 @@ class TodoFragment : Fragment()
         toDoFragment__header_spinner = v.findViewById(R.id.toDoFragment__header_spinner)
         toDoFragment__header_spinner.onItemSelectedListener = this
         // note. options
+        toDoFragment__header_spinner_delete_button = v.findViewById(R.id.toDoFragment__header_spinner_delete_button)
+        toDoFragment__header_spinner_delete_button.setOnClickListener(this)
         toDoFragment__header_option = v.findViewById(R.id.toDoFragment__header_option)
         toDoFragment__header_option.setOnClickListener(this)
 
@@ -224,21 +230,38 @@ class TodoFragment : Fragment()
             }
             spinnerAdapter.notifyDataSetChanged()
 
+            toDoFragment__header_spinner.setSelection(0)
+
         } catch (e: Exception) {e.printStackTrace()}
 
     }
 
     private fun createTodo() {
-        val mapData: HashMap<String, String> = HashMap()
-        mapData["category"] = toDoFragment__header_spinner.selectedItem.toString()
-        mapData["categoryPosition"] = toDoFragment__header_spinner.selectedItemPosition.toString()
-        mapData["value"] = toDoFragment__body_editor_writer.text.toString()
-        Log.i(TAG,"mapData:${mapData.entries}")
-        val model = WorkManager.createTodo(activity!!, mapData)
-        model?.run {
-            todos.add(this)
-            todoAdapter.notifyItemInserted(todos.size)
+        // note. set created
+        val created = LocalDateTime.now().toString()
+
+        var todo = TodoModel().apply {
+            this.category = toDoFragment__header_spinner.selectedItem.toString()
+            this.categoryPosition = toDoFragment__header_spinner.selectedItemPosition.toInt()
+            this.value = toDoFragment__body_editor_writer.text.toString()
+            this.status = PENDING
+            this.created = created
+            this.updated = created
         }
+
+        // note. new code
+        WorkManagerV2.createTodo(activity!!, todo)?.run {
+            Log.e(TAG, "response:$this")
+            todo.pk = this.getInt("pk")
+            todos.add(todo)
+        }
+
+        // note. add to do item into categories
+        categories[todo.categoryPosition].todos.add(todo)
+        categories[todo.categoryPosition].log()
+
+        // note. recyclerview
+        todoAdapter.notifyDataSetChanged()
 
         // note. clear focus
         toDoFragment__body_editor_writer.setText(BLANK)
@@ -264,13 +287,60 @@ class TodoFragment : Fragment()
     override fun onClick(v: View) {
         Log.i(TAG, resources.getResourceEntryName(v.id))
         when (v.id) {
-            R.id.toDoFragment__body_editor_submit -> {
-                createTodo()
+
+            R.id.toDoFragment__header_spinner_delete_button -> {
+                try {
+                    Log.e(TAG, "categoriesSize:${categories.size}\nselectedItemPosition:${toDoFragment__header_spinner.selectedItemPosition}")
+                    // note. origin code
+//                    val position = toDoFragment__header_spinner.selectedItemPosition
+//                    // note. get current item
+//                    val categoryObject = CategoryManager.deleteCategoryById(activity!!, categories[position])
+//
+//                    categoryObject?.run {
+//                        Log.e(TAG, "obj:$this")
+//
+//                        // note. set model
+//                        val model: CategoryModel = Gson().fromJson(this.toString(), CategoryModel::class.java)
+//                        model.log()
+//                        val todoObject = WorkManager.deleteTodoByCategory(activity!!, model)
+//
+//                        // note. delete category
+//                        categories.removeAt(position)
+//
+//                        // note. set spinner list for
+//                        spinnerList.removeAt(position)
+//                        spinnerAdapter.notifyDataSetChanged()
+//
+//                        // note. set category after delete item
+//                        Log.e(TAG, "toDoFragment__header_spinnerSize:${toDoFragment__header_spinner.size}")
+//                        if (categories.size != 0) {
+//                            toDoFragment__header_spinner.setSelection(0)
+//                        } else {
+//                            resetCategories()
+//                        }
+//                    }
+
+                    // note. new code
+                    val position = toDoFragment__header_spinner.selectedItemPosition
+                    val model = categories[position]
+
+                    val categoryDeleteResponse = CategoryManagerV2.deleteCategory(activity!!, model)
+                    Log.e(TAG, "categoryDeleteResponse:$categoryDeleteResponse")
+
+                    // note. delete in category list
+                    categories.removeAt(position)
+
+                    refreshCategories()
+                    refreshTodos()
+
+                    spinnerAdapter.notifyDataSetChanged()
+                } catch (e: Exception) {e.printStackTrace()}
+
             }
 
-            R.id.toDoFragment__header_option -> {
-                openMenu()
-            }
+            R.id.toDoFragment__header_option -> { openMenu() }
+
+            R.id.toDoFragment__body_editor_submit -> { createTodo() }
 
             R.id.toDoFragment__body_blank_container -> {
                 toDoFragment__body_editor_writer.requestFocus()
@@ -388,11 +458,12 @@ class TodoFragment : Fragment()
 
     }
 
-    override fun todoDelete(p: Int) {
+    override fun todoDelete(p: Int, todo: TodoModel) {
         try {
             // note. delete real data
-            deleteTodo(activity!!, p)
-            // note. delete ui
+            WorkManagerV2.deleteTodoByTodo(activity!!, todo)
+
+            // note. delete in ui
             todos.removeAt(p)
             todoAdapter.notifyItemRemoved(p)
 

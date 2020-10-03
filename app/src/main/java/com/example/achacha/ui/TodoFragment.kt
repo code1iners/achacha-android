@@ -237,6 +237,9 @@ class TodoFragment : Fragment()
     }
 
     private fun createTodo() {
+        // note. check data validation
+        if (dataIsNotValid()) return
+
         // note. set created
         val created = LocalDateTime.now().toString()
 
@@ -267,6 +270,20 @@ class TodoFragment : Fragment()
         toDoFragment__body_editor_writer.setText(BLANK)
 
         displayTodos()
+    }
+
+    private fun dataIsNotValid(): Boolean {
+        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+
+        val todoValue = toDoFragment__body_editor_writer.text.toString()
+
+        // note. check non-null
+        if (todoValue.isNullOrBlank()) {
+            Toast.makeText(context!!, resources.getString(R.string.todo_value_is_not_exist), Toast.LENGTH_SHORT).show()
+            return true
+        }
+
+        return false
     }
 
     fun resetCategories() {

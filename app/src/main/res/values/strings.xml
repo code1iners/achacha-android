@@ -22,6 +22,9 @@
     <string name="phrase_001">Do more of what makes you happy.</string>
 
     <!-- note. kind -->
+    <string name="todo_value_is_not_exist">해야 할 일을 입력해주세요.</string>
+
+    <!-- note. kind -->
     <string name="today">Today</string>
     <string name="btn_todo_create">Create</string>
     <string name="kind_new_list">+ New List</string>

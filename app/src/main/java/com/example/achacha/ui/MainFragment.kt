@@ -15,8 +15,8 @@ class MainFragment: Fragment() {
     lateinit var mainFocusFragment__viewPager: ViewPager
 
     // note. fragments
-    lateinit var toDoFragment: TodoFragment
-    lateinit var mainFocusFragment: MainFocusFragment
+    var toDoFragment: TodoFragment? = null
+    var mainFocusFragment: MainFocusFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +55,8 @@ class MainFragment: Fragment() {
             mainViewPagerAdapter = MainViewPagerAdapter(fragmentManager!!)
 
             mainViewPagerAdapter.fragmentCollection = ArrayList()
-            mainViewPagerAdapter.fragmentCollection.add(mainFocusFragment)
-            mainViewPagerAdapter.fragmentCollection.add(toDoFragment)
+            mainViewPagerAdapter.fragmentCollection.add(mainFocusFragment!!)
+            mainViewPagerAdapter.fragmentCollection.add(toDoFragment!!)
 
             mainFocusFragment__viewPager.adapter = mainViewPagerAdapter
 

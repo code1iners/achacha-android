@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.BLANK
@@ -22,6 +24,8 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
 
     }
 
+    // note. widgets-header
+    lateinit var setUsernameFragment__logo_image: ImageView
     // note. widgets-body
     lateinit var setUsernameFragment__username_answer: EditText
 
@@ -36,8 +40,20 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
         val v = inflater.inflate(R.layout.fragment_set_username, container, false)
 
         init(v)
+        display()
 
         return v
+    }
+
+    private fun display() {
+        displayHeaders()
+    }
+
+    private fun displayHeaders() {
+        try {
+//            Glide.with(context!!).load(resources.getDrawable(R.drawable.alpaca_001)).circleCrop().into(setUsernameFragment__logo_image)
+
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun init(v: View) {
@@ -55,6 +71,9 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
 
     private fun initWidgets(v: View) {
         // note. assignment
+        // note. widgets-header
+        setUsernameFragment__logo_image = v.findViewById(R.id.setUsernameFragment__logo_image)
+        // note. widgets-body
         setUsernameFragment__username_answer = v.findViewById(R.id.setUsernameFragment__username_answer)
 
         // note. listener

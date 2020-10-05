@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity()
 
         init()
         display()
+        timer()
     }
 
     private fun init() {
@@ -106,7 +107,6 @@ class MainActivity : AppCompatActivity()
 
         timer = CustomTimerTest.CurrentTimer()
         timer.currentTimerListener = this
-        timer.start()
     }
 
     private fun initWidgets() {
@@ -196,6 +196,11 @@ class MainActivity : AppCompatActivity()
                 null
             )
         }
+    }
+
+    private fun timer() {
+
+        timer.start()
     }
 
     // note. @override
@@ -322,11 +327,14 @@ class MainActivity : AppCompatActivity()
             val minutes = if (date.minutes < 10) "0" + date.minutes else date.minutes.toString()
             val seconds = if (date.seconds < 10) "0" + date.seconds else date.seconds.toString()
 
-            Log.i(TAG, "year:$year, hours:$hours, minutes:$minutes, seconds:$seconds")
+//            Log.i(TAG, "year:$year, hours:$hours, minutes:$minutes, seconds:$seconds")
 
-            mainFragment.mainFocusFragment.mainFragment__header_timer_hours.text = hours
-            mainFragment.mainFocusFragment.mainFragment__header_timer_minutes.text = minutes
-
+            mainFragment.mainFocusFragment?.run {
+                handler.post {
+                    this.mainFragment__header_timer_hours.text = hours
+                    this.mainFragment__header_timer_minutes.text = minutes
+                }
+            }
         } catch (e: Exception) {e.printStackTrace()}
     }
 

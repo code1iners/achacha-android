@@ -2,6 +2,7 @@
 <resources>
     <!-- note. Custom Color -->
     <color name="white">#29323c</color>
+    <color name="default_text_color">#ffffff</color>
     <color name="black">#ffffff</color>
     <color name="sexyBlack">#ffffff</color>
     <color name="sexyBlack2">#ffffff</color>
@@ -9,7 +10,7 @@
 
     <color name="sexyGray">#ffffff</color>
     <color name="sexyGray2">#ffffff</color>
-    <color name="sexyGray3">#29323c</color>
+    <color name="sexyGray3">#CFCFD6</color>
 
     <color name="kakaoYellow">#FFE504</color>
     <color name="selected_item">#FF9800</color>
@@ -18,4 +19,8 @@
     <color name="sexyRed">#FD154F</color>
     <color name="sexyYellow">#FED06D</color>
     <color name="transparent">#80000000</color>
+
+    <!-- note. spinner color -->
+    <color name="spinner_item_default_color">#ffffff</color>
+    <color name="spinner_drop_down_item_default_color">#ffffff</color>
 </resources>

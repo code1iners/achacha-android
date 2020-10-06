@@ -14,6 +14,7 @@ import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.helpers.CategoryManager
 import com.example.achacha.helpers.CustomTimerTest
+import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.MAIN_FOCUS
 import com.example.achacha.helpers.Protocol.WORK
@@ -30,9 +31,11 @@ class MainFocusFragment : Fragment()
     , CompoundButton.OnCheckedChangeListener {
 
     // note. widgets-header
+    lateinit var mainFocusFragment__layout: RelativeLayout
     lateinit var mainFragment__header_container: LinearLayout
     lateinit var mainFragment__header_timer_hours: TextView
     lateinit var mainFragment__header_timer_minutes: TextView
+    lateinit var mainFragment__header_timer_seconds: TextView
     lateinit var mainFragment__header_greeting: TextView
     lateinit var mainFragment__header_username: TextView
     // note. widgets-body
@@ -67,11 +70,26 @@ class MainFocusFragment : Fragment()
         val v = inflater.inflate(R.layout.fragment_main_focus, container, false)
 
         init(v)
+        displayBackground()
         setCurrentTimer()
         setGreetings()
         refreshBodyUI()
 
         return v
+    }
+
+    private fun displayBackground() {
+        try {
+            val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
+            Log.i(TAG, "status:$status")
+            if (status.isNullOrBlank()) return
+
+            if (status.toBoolean()) {
+                mainFocusFragment__layout.background = null
+            } else {
+                mainFocusFragment__layout.setBackgroundDrawable(MainActivity.getBackGroundImageByRandom())
+            }
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun init(v: View) {
@@ -96,9 +114,11 @@ class MainFocusFragment : Fragment()
         
         try {
             // note. assignment
+            mainFocusFragment__layout = v.findViewById(R.id.mainFocusFragment__layout)
             mainFragment__header_container = v.findViewById(R.id.mainFragment__header_container)
             mainFragment__header_timer_hours = v.findViewById(R.id.mainFragment__header_timer_hours)
             mainFragment__header_timer_minutes = v.findViewById(R.id.mainFragment__header_timer_minutes)
+            mainFragment__header_timer_seconds = v.findViewById(R.id.mainFragment__header_timer_seconds)
             mainFragment__header_greeting = v.findViewById(R.id.mainFragment__header_greeting)
             mainFragment__header_username = v.findViewById(R.id.mainFragment__header_username)
             // note. widgets-body-QnA
@@ -118,7 +138,9 @@ class MainFocusFragment : Fragment()
 
             // note. listener
             mainFragment__body_answer.setOnEditorActionListener(this)
+            mainFragment__body_focus_contents_checkbox.setOnCheckedChangeListener(this)
             mainFragment__body_focus_contents_delete.setOnClickListener(this)
+            mainFragment__body_focus_contents_data.setOnClickListener(this)
         } catch (e: Exception) {e.printStackTrace()}
     }
 
@@ -287,7 +309,6 @@ class MainFocusFragment : Fragment()
     }
 
     override fun onCheckedChanged(v: CompoundButton, isChecked: Boolean) {
-        
         Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
             R.id.mainFragment__body_focus_contents_checkbox -> {
@@ -304,6 +325,10 @@ class MainFocusFragment : Fragment()
         
         Log.i(TAG, "${resources.getResourceEntryName(v.id)}")
         when (v.id) {
+            R.id.mainFragment__body_focus_contents_data -> {
+                mainFragment__body_focus_contents_checkbox.performClick()
+            }
+
             R.id.mainFragment__body_focus_contents_delete -> {
                 deleteMainFocus()
             }

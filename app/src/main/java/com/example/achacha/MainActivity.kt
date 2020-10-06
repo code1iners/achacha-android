@@ -1,11 +1,12 @@
 package com.example.achacha
 
-import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.RelativeLayout
@@ -33,6 +34,7 @@ import com.example.helpers.PreferencesManager
 import com.example.helpers.ScreenManager
 import com.jakewharton.threetenabp.AndroidThreeTen
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity()
@@ -51,8 +53,27 @@ class MainActivity : AppCompatActivity()
         lateinit var drawerLayout: DrawerLayout
         lateinit var drawerView: View
 
+        // note. background-images
+        lateinit var backgrounds: ArrayList<Drawable>
+
         fun openMenu() {
             drawerLayout.openDrawer(drawerView)
+        }
+
+        fun getBackGroundImageByRandom(): Drawable? {
+//            Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+            try {
+                backgrounds.run {
+//                    Log.e(TAG, "backgroundsSize:${this.size}")
+                    if (this.size == 0) return null
+
+                    val selectedNumber = Random().nextInt(this.size)
+//                    Log.i(TAG, "selectedNumber:$selectedNumber")
+
+                    return this[selectedNumber]
+                }
+            } catch (e: Exception) {e.printStackTrace()}
+            return null
         }
     }
 
@@ -87,13 +108,45 @@ class MainActivity : AppCompatActivity()
     }
 
     private fun init() {
+        initScreenSettings()
         initLibraries()
         initVars()
         initWidgets()
-        initScreenSettings()
-        initListeners()
-        initUsername()
         initSettings()
+        initListeners()
+        initBackgrounds()
+        initUsername()
+    }
+
+    private fun initBackgrounds() {
+        val status = PreferencesManager(this, DISPLAY_MODE)[DARK_MODE]
+        Log.e(TAG, "status:$status")
+
+        try {
+            if (!status.toBoolean() && backgrounds.size == 0) {
+                val backgroundList = arrayOf(
+                    resources.getDrawable(R.drawable.background_001),
+                    resources.getDrawable(R.drawable.background_002),
+                    resources.getDrawable(R.drawable.background_003),
+                    resources.getDrawable(R.drawable.background_004),
+                    resources.getDrawable(R.drawable.background_005),
+                    resources.getDrawable(R.drawable.background_006),
+                    resources.getDrawable(R.drawable.background_007),
+                    resources.getDrawable(R.drawable.background_008),
+                    resources.getDrawable(R.drawable.background_009),
+                    resources.getDrawable(R.drawable.background_010),
+                    resources.getDrawable(R.drawable.background_011),
+                    resources.getDrawable(R.drawable.background_012),
+                    resources.getDrawable(R.drawable.background_013),
+                    resources.getDrawable(R.drawable.background_014),
+                    resources.getDrawable(R.drawable.background_015),
+                    resources.getDrawable(R.drawable.background_016)
+                )
+
+                backgrounds.clear()
+                backgrounds.addAll(backgroundList)
+            }
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun initLibraries() {
@@ -107,6 +160,9 @@ class MainActivity : AppCompatActivity()
 
         timer = CustomTimerTest.CurrentTimer()
         timer.currentTimerListener = this
+
+        // note. background list
+        backgrounds = ArrayList()
     }
 
     private fun initWidgets() {
@@ -133,6 +189,7 @@ class MainActivity : AppCompatActivity()
 
     private fun initScreenSettings() {
         ScreenManager.alwaysOn(this)
+        ScreenManager.fullScreen(this)
     }
 
     private fun initListeners() {
@@ -163,7 +220,7 @@ class MainActivity : AppCompatActivity()
     }
 
     private fun changeMode(isDarkMode: Boolean) {
-        Log.w(TAG, object:Any(){}.javaClass.enclosingMethod!!.name)
+        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
         Log.i(TAG, "isDarkMode:$isDarkMode")
         drawerView__options_darkMode_trigger.isChecked = isDarkMode
     }
@@ -255,16 +312,24 @@ class MainActivity : AppCompatActivity()
                         // note. init username
                         initUsername()
 
-                        // note. init mainFocus
-                        val mainFocus =
-                            MainFragment.mainViewPagerAdapter.fragmentCollection[0] as MainFocusFragment
-                        mainFocus.resetMainFocus()
+                        try {
+                            // note. init mainFocus
+                            val mainFocus =
+                                MainFragment.mainViewPagerAdapter.fragmentCollection[0] as MainFocusFragment
+                            mainFocus.resetMainFocus()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
 
-                        // note. init to do
-                        val todo =
-                            MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
-                        todo.resetCategories()
-                        todo.resetTodos()
+                        try {
+                            // note. init to do
+                            val todo =
+                                MainFragment.mainViewPagerAdapter.fragmentCollection[1] as TodoFragment
+                            todo.resetCategories()
+                            todo.resetTodos()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
 
                         display()
                     }
@@ -277,7 +342,11 @@ class MainActivity : AppCompatActivity()
                 }
 
                 R.id.drawerView__etc_report_container -> {
-                    Toast.makeText(this, resources.getString(R.string.menu_service_information), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.menu_service_information),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         } catch (e: Exception) {e.printStackTrace()}
@@ -304,17 +373,21 @@ class MainActivity : AppCompatActivity()
 
         when (v.id) {
             R.id.drawerView__options_darkMode_trigger -> {
+                var mode: Int = -1
                 if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    mode = AppCompatDelegate.MODE_NIGHT_YES
+                    AppCompatDelegate.setDefaultNightMode(mode)
 
                     // note. save information in device
                     PreferencesManager(this, DISPLAY_MODE).add(DARK_MODE, true.toString())
                 } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
+                    mode = AppCompatDelegate.MODE_NIGHT_NO
+                    AppCompatDelegate.setDefaultNightMode(mode)
                     // note. save information in device
                     PreferencesManager(this, DISPLAY_MODE).add(DARK_MODE, false.toString())
                 }
+
+                Log.e(TAG, "mDayNightMode:$mDayNightMode, updateMode:$mode")
                 delegate.applyDayNight()
             }
         }
@@ -333,6 +406,7 @@ class MainActivity : AppCompatActivity()
                 handler.post {
                     this.mainFragment__header_timer_hours.text = hours
                     this.mainFragment__header_timer_minutes.text = minutes
+                    this.mainFragment__header_timer_seconds.text = seconds
                 }
             }
         } catch (e: Exception) {e.printStackTrace()}

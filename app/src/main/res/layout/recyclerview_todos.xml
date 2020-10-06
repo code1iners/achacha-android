@@ -10,11 +10,13 @@
         android:id="@+id/todosRecyclerView_check"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
+        android:theme="@style/checkBoxTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/todosRecyclerView_todo_read_mode"
+        android:textColor="@color/default_text_color"
         android:layout_toEndOf="@+id/todosRecyclerView_check"
         android:layout_toStartOf="@+id/todosRecyclerView_delete"
         android:layout_centerVertical="true"
@@ -24,6 +26,8 @@
     <EditText
         android:id="@+id/todosRecyclerView_todo_write_mode"
         android:visibility="gone"
+        android:textColor="@color/default_text_color"
+        android:backgroundTint="@color/default_text_color"
         android:layout_toEndOf="@+id/todosRecyclerView_check"
         android:layout_toStartOf="@+id/todosRecyclerView_update"
         android:layout_centerVertical="true"

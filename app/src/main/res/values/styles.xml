@@ -18,6 +18,12 @@
 <!--        <item name="windowActionBar">false</item>-->
 <!--        <item name="windowNoTitle">true</item>-->
 <!--    </style>-->
+    
+    <!-- note. check box theme -->
+    <style name="checkBoxTheme" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/sexyGreen</item>
+        <item name="android:textColorSecondary">@color/sexyYellow</item>
+    </style>
 
     <style name="NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

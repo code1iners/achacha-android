@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.example.achacha.MainActivity
 import com.example.achacha.R
 import com.example.achacha.adapters.MainViewPagerAdapter
+import com.example.achacha.helpers.Protocol
+import com.example.helpers.PreferencesManager
 
 class MainFragment: Fragment() {
 

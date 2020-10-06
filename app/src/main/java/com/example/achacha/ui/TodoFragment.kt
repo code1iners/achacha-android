@@ -20,6 +20,7 @@ import com.example.achacha.adapters.TodoAdapter
 import com.example.achacha.helpers.CategoryManager.Companion.createCategoryAsJsonObject
 import com.example.achacha.helpers.CategoryManager.Companion.readCategoryAllAsJsonArray
 import com.example.achacha.helpers.CategoryManagerV2
+import com.example.achacha.helpers.Protocol
 import com.example.achacha.helpers.Protocol.BLANK
 import com.example.achacha.helpers.Protocol.PENDING
 import com.example.achacha.helpers.Protocol.REQUEST_CODE_EDITOR_ACTIVITY
@@ -29,11 +30,11 @@ import com.example.achacha.helpers.Protocol.STATUS_OK
 import com.example.achacha.helpers.Protocol.TITLE
 import com.example.achacha.helpers.Protocol.VALUE
 import com.example.achacha.helpers.WorkManager
-import com.example.achacha.helpers.WorkManager.Companion.deleteTodo
 import com.example.achacha.helpers.WorkManagerV2
 import com.example.achacha.models.CategoryModel
 import com.example.achacha.models.TodoModel
 import com.example.helpers.Keypad
+import com.example.helpers.PreferencesManager
 import com.google.gson.Gson
 import org.threeten.bp.LocalDateTime
 import kotlin.collections.ArrayList
@@ -46,6 +47,7 @@ class TodoFragment : Fragment()
     , TodoAdapter.OnTodoListener {
 
     // note. widgets-header
+    private lateinit var todoFragment__layout: LinearLayout
     private lateinit var toDoFragment__header_spinner: Spinner
     private lateinit var toDoFragment__header_spinner_delete_button: ImageButton
     private lateinit var toDoFragment__header_option: ImageButton
@@ -68,6 +70,7 @@ class TodoFragment : Fragment()
     // note. kind
     private var selectedKind: String? = null
     private lateinit var spinnerAdapter: ArrayAdapter<String>
+//    private lateinit var spinnerAdapter: SpinnerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,12 +80,25 @@ class TodoFragment : Fragment()
         val v = inflater.inflate(R.layout.fragment_todo, container, false)
 
         init(v)
+        // note. set background image
+        displayBackground()
         // note. refresh to do list
         refreshTodos()
         // note. refresh categories & spinner list
         refreshCategories()
-
         return v
+    }
+
+    private fun displayBackground() {
+        try {
+            val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
+            if (status.isNullOrBlank()) return
+
+            if (!status.toBoolean()) {
+                todoFragment__layout.setBackgroundDrawable(MainActivity.getBackGroundImageByRandom())
+
+            }
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun displayTodos() {
@@ -134,6 +150,8 @@ class TodoFragment : Fragment()
 
     private fun initWidgets(v: View) {
 
+        // note. # layout
+        todoFragment__layout = v.findViewById(R.id.todoFragment__layout)
         // note. # header
         // note. spinner
         toDoFragment__header_spinner = v.findViewById(R.id.toDoFragment__header_spinner)
@@ -189,7 +207,9 @@ class TodoFragment : Fragment()
     private fun initSpinnerAdapter() {
         try {
             // note. set adapter
-            spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerList)
+//            spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerList)
+            spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, spinnerList)
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_drop_down_item)
             toDoFragment__header_spinner.adapter = spinnerAdapter
 
         } catch (e: Exception) {e.printStackTrace()}
@@ -245,7 +265,7 @@ class TodoFragment : Fragment()
 
         var todo = TodoModel().apply {
             this.category = toDoFragment__header_spinner.selectedItem.toString()
-            this.categoryPosition = toDoFragment__header_spinner.selectedItemPosition.toInt()
+            this.categoryPosition = toDoFragment__header_spinner.selectedItemPosition
             this.value = toDoFragment__body_editor_writer.text.toString()
             this.status = PENDING
             this.created = created

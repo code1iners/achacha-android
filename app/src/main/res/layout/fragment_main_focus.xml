@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_marginVertical="10dp"
-    android:layout_marginHorizontal="30dp"
+    android:id="@+id/mainFocusFragment__layout"
+    android:background="@drawable/background_001"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/mainFragment__header_container"
         android:orientation="vertical"
+        android:layout_above="@+id/mainFragment__body_container"
+        android:layout_marginBottom="80dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -22,6 +23,9 @@
             <TextView
                 android:id="@+id/mainFragment__header_timer_hours"
                 android:text="@string/timer_init"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="70sp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -29,6 +33,9 @@
             <TextView
                 android:id="@+id/mainFragment__header_timer_colon"
                 android:text="@string/colon"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="70sp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -36,6 +43,29 @@
             <TextView
                 android:id="@+id/mainFragment__header_timer_minutes"
                 android:text="@string/timer_init"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="70sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/mainFragment__header_timer_colon2"
+                android:text="@string/colon"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="70sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/mainFragment__header_timer_seconds"
+                android:text="@string/timer_init"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="70sp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -52,12 +82,20 @@
             <TextView
                 android:id="@+id/mainFragment__header_greeting"
                 android:text="@string/greeting_at_001"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/mainFragment__header_username"
                 android:text="Genius"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textAlignment="center"
                 android:layout_marginStart="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -70,6 +108,7 @@
         android:id="@+id/mainFragment__body_container"
         android:layout_centerInParent="true"
         android:orientation="vertical"
+        android:paddingHorizontal="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -83,12 +122,21 @@
             <TextView
                 android:id="@+id/mainFragment__body_question"
                 android:text="@string/question_main"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <EditText
                 android:id="@+id/mainFragment__body_answer"
+                android:textColor="@color/default_text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:backgroundTint="@color/default_text_color"
                 android:singleLine="true"
                 android:imeOptions="actionDone"
                 android:layout_width="match_parent"
@@ -106,6 +154,10 @@
             <TextView
                 android:id="@+id/mainFragment__body_focus_contents_title"
                 android:text="@string/focus_contents_title"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textAlignment="center"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -120,6 +172,7 @@
                 <CheckBox
                     android:id="@+id/mainFragment__body_focus_contents_checkbox"
                     android:layout_gravity="center"
+                    android:theme="@style/checkBoxTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -127,8 +180,11 @@
                     android:id="@+id/mainFragment__body_focus_contents_data"
                     android:layout_gravity="center"
                     android:text="@string/main_focus"
-                    android:textSize="18sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
+                    android:textColor="@color/default_text_color"
+                    android:textAlignment="center"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -152,6 +208,7 @@
         android:id="@+id/mainFragment__footer_phrase_container"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -159,6 +216,10 @@
         <TextView
             android:id="@+id/mainFragment__footer_phrase"
             android:text="@string/phrase_001"
+            android:textColor="@color/default_text_color"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

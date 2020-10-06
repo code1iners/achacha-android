@@ -6,6 +6,7 @@
 
     <!-- note. Custom Color -->
     <color name="white">#ffffff</color>
+    <color name="default_text_color">#ffffff</color>
     <color name="black">#000000</color>
     <color name="sexyBlack">#29323c</color>
     <color name="sexyBlack2">#22243C</color>
@@ -22,4 +23,8 @@
     <color name="sexyRed">#FD154F</color>
     <color name="sexyYellow">#FED06D</color>
     <color name="transparent">#80000000</color>
+
+    <!-- note. spinner color -->
+    <color name="spinner_item_default_color">#ffffff</color>
+    <color name="spinner_drop_down_item_default_color">#29323c</color>
 </resources>

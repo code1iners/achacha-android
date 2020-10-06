@@ -2,12 +2,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/todoFragment__layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/toDoFragment__header_container"
+        android:layout_marginTop="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -35,6 +37,7 @@
             android:background="@null"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
             android:layout_width="20dp"
             android:layout_height="20dp"/>
 
@@ -51,6 +54,10 @@
             android:hint="New Todo"
             android:singleLine="true"
             android:imeOptions="actionDone"
+            android:textColor="@color/default_text_color"
+            android:textColorHint="@color/sexyGray3"
+            android:backgroundTint="@color/default_text_color"
+            android:paddingHorizontal="15dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/toDoFragment__body_editor_submit"
             android:layout_marginHorizontal="5dp"
@@ -60,9 +67,10 @@
         <Button
             android:id="@+id/toDoFragment__body_editor_submit"
             android:text="@string/btn_todo_create"
+            android:textColor="@color/sexyBlue"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/border_5"
+            android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="35dp"/>
 
@@ -95,6 +103,7 @@
             <TextView
                 android:id="@+id/toDoFragment__body_blank_title"
                 android:text="@string/guide_blank_title"
+                android:textColor="@color/default_text_color"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"

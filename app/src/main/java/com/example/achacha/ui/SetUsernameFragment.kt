@@ -8,12 +8,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.achacha.MainActivity
+import com.example.achacha.MainActivity.Companion.getBackGroundImageByRandom
 import com.example.achacha.R
 import com.example.achacha.helpers.Protocol.BLANK
+import com.example.achacha.helpers.Protocol.DARK_MODE
+import com.example.achacha.helpers.Protocol.DISPLAY_MODE
 import com.example.achacha.helpers.Protocol.USERNAME
 import com.example.achacha.helpers.Protocol.USER_PROFILE
 import com.example.helpers.PreferencesManager
@@ -25,6 +29,7 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     // note. widgets-header
+    lateinit var setUsernameFragment__layout: RelativeLayout
     lateinit var setUsernameFragment__logo_image: ImageView
     // note. widgets-body
     lateinit var setUsernameFragment__username_answer: EditText
@@ -46,7 +51,20 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     }
 
     private fun display() {
+        displayBackground()
         displayHeaders()
+    }
+
+    private fun displayBackground() {
+        try {
+            val status = PreferencesManager(activity!!, DISPLAY_MODE)[DARK_MODE]
+            if (status.isNullOrBlank()) return
+
+            if (!status.toBoolean()) {
+                setUsernameFragment__layout.setBackgroundDrawable(getBackGroundImageByRandom())
+
+            }
+        } catch (e: Exception) {e.printStackTrace()}
     }
 
     private fun displayHeaders() {
@@ -72,6 +90,7 @@ class SetUsernameFragment : Fragment(), TextView.OnEditorActionListener {
     private fun initWidgets(v: View) {
         // note. assignment
         // note. widgets-header
+        setUsernameFragment__layout = v.findViewById(R.id.setUsernameFragment__layout)
         setUsernameFragment__logo_image = v.findViewById(R.id.setUsernameFragment__logo_image)
         // note. widgets-body
         setUsernameFragment__username_answer = v.findViewById(R.id.setUsernameFragment__username_answer)

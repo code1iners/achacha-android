@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".ui.EditorActivity"/>
+        <activity android:name=".ui.NewTodoListEditorActivity"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance">

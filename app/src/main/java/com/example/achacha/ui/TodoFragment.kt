@@ -487,9 +487,9 @@ class TodoFragment : Fragment()
                     R.id.toDoFragment__header_spinner -> {
                         when (selectedKind) {
                             resources.getString(R.string.kind_new_list) -> {
-                                val editorActivity = Intent(activity, EditorActivity::class.java)
-                                editorActivity.putExtra(TITLE, "New kind list")
-                                startActivityForResult(editorActivity, REQUEST_CODE_EDITOR_ACTIVITY)
+                                val newTodoListEditorActivity = Intent(activity, NewTodoListEditorActivity::class.java)
+                                newTodoListEditorActivity.putExtra(TITLE, "New kind list")
+                                startActivityForResult(newTodoListEditorActivity, REQUEST_CODE_EDITOR_ACTIVITY)
                             }
 
                             else -> {

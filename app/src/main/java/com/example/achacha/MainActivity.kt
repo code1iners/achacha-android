@@ -374,7 +374,6 @@ class MainActivity : AppCompatActivity()
                                             Log.e(TAG, "something is wrong")
                                         }
                                     }
-
                                 }
 
                                 else -> {

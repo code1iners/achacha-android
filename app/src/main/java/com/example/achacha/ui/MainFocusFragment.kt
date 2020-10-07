@@ -70,7 +70,7 @@ class MainFocusFragment : Fragment()
         val v = inflater.inflate(R.layout.fragment_main_focus, container, false)
 
         init(v)
-        displayBackground()
+        setBackground()
         setCurrentTimer()
         setGreetings()
         refreshBodyUI()
@@ -78,7 +78,7 @@ class MainFocusFragment : Fragment()
         return v
     }
 
-    fun displayBackground() {
+    fun setBackground() {
         try {
             val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
             Log.i(TAG, "status:$status")

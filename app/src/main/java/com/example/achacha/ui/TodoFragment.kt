@@ -82,7 +82,7 @@ class TodoFragment : Fragment()
 
         init(v)
         // note. set background image
-        displayBackground()
+        setBackground()
         // note. refresh to do list
         refreshTodos()
         // note. refresh categories & spinner list
@@ -90,14 +90,15 @@ class TodoFragment : Fragment()
         return v
     }
 
-    fun displayBackground() {
+    fun setBackground() {
         try {
             val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
             if (status.isNullOrBlank()) return
 
-            if (!status.toBoolean()) {
+            if (status.toBoolean()) {
+                todoFragment__layout.background = null
+            } else {
                 todoFragment__layout.setBackgroundDrawable(MainActivity.getBackGroundImageByRandom())
-
             }
         } catch (e: Exception) {e.printStackTrace()}
     }
@@ -488,7 +489,7 @@ class TodoFragment : Fragment()
                         when (selectedKind) {
                             resources.getString(R.string.kind_new_list) -> {
                                 val newTodoListEditorActivity = Intent(activity, NewTodoListEditorActivity::class.java)
-                                newTodoListEditorActivity.putExtra(TITLE, "New kind list")
+                                newTodoListEditorActivity.putExtra(TITLE, "New Category")
                                 startActivityForResult(newTodoListEditorActivity, REQUEST_CODE_EDITOR_ACTIVITY)
                             }
 

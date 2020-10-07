@@ -280,28 +280,27 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+//        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
     }
 
     override fun onDrawerOpened(drawerView: View) {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+//        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
     }
 
     override fun onDrawerClosed(drawerView: View) {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+//        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
     }
 
     override fun onDrawerStateChanged(newState: Int) {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+//        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
+//        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
         return true
     }
 
     override fun onClick(v: View) {
-        Log.w(TAG, object : Any() {}.javaClass.enclosingMethod!!.name)
         try {
             Log.i(TAG, resources.getResourceEntryName(v.id))
             when (v.id) {
@@ -363,11 +362,11 @@ class MainActivity : AppCompatActivity()
                                     Log.e(TAG, "mainFragmentCurrentItem:$currentItem")
                                     when (currentItem) {
                                         0 -> {
-                                            mainFragment.mainFocusFragment?.displayBackground()
+                                            mainFragment.mainFocusFragment?.setBackground()
                                         }
 
                                         1 -> {
-                                            mainFragment.toDoFragment?.displayBackground()
+                                            mainFragment.toDoFragment?.setBackground()
                                         }
 
                                         else -> {

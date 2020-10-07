@@ -92,7 +92,9 @@ class NewTodoListEditorActivity : AppCompatActivity()
       val status = PreferencesManager(this, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
       if (status.isNullOrBlank()) return
 
-      if (!status.toBoolean()) {
+      if (status.toBoolean()) {
+        newTodoListEditorActivity__layout.background = null
+      } else {
         newTodoListEditorActivity__layout.setBackgroundDrawable(MainActivity.getBackGroundImageByRandom())
       }
     } catch (e: Exception) {e.printStackTrace()}

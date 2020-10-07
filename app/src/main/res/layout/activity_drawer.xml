@@ -12,6 +12,7 @@
         android:id="@+id/drawerView__title_container"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
+        android:layout_marginTop="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

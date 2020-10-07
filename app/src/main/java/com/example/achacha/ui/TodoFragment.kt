@@ -1,6 +1,7 @@
 package com.example.achacha.ui
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -89,7 +90,7 @@ class TodoFragment : Fragment()
         return v
     }
 
-    private fun displayBackground() {
+    fun displayBackground() {
         try {
             val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
             if (status.isNullOrBlank()) return
@@ -358,19 +359,29 @@ class TodoFragment : Fragment()
 //                    }
 
                     // note. new code
-                    val position = toDoFragment__header_spinner.selectedItemPosition
-                    val model = categories[position]
+                    val b = AlertDialog.Builder(activity)
+                    b
+                        .setTitle("카테고리 제거")
+                        .setMessage("제거된 카테고리는 다시 되돌릴 수 없습니다. 정말로 진행 하시겠습니까?")
+                        .setNegativeButton("취소") {_,_ ->}
+                        .setPositiveButton("제거") {_,_ ->
+                            val position = toDoFragment__header_spinner.selectedItemPosition
+                            val model = categories[position]
 
-                    val categoryDeleteResponse = CategoryManagerV2.deleteCategory(activity!!, model)
-                    Log.e(TAG, "categoryDeleteResponse:$categoryDeleteResponse")
+                            val categoryDeleteResponse = CategoryManagerV2.deleteCategory(activity!!, model)
+                            Log.e(TAG, "categoryDeleteResponse:$categoryDeleteResponse")
 
-                    // note. delete in category list
-                    categories.removeAt(position)
+                            // note. delete in category list
+                            categories.removeAt(position)
 
-                    refreshCategories()
-                    refreshTodos()
+                            refreshCategories()
+                            refreshTodos()
 
-                    spinnerAdapter.notifyDataSetChanged()
+                            spinnerAdapter.notifyDataSetChanged()
+                        }
+                    val d = b.create()
+                    d.show()
+
                 } catch (e: Exception) {e.printStackTrace()}
 
             }

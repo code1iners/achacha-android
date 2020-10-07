@@ -78,7 +78,7 @@ class MainFocusFragment : Fragment()
         return v
     }
 
-    private fun displayBackground() {
+    fun displayBackground() {
         try {
             val status = PreferencesManager(activity!!, Protocol.DISPLAY_MODE)[Protocol.DARK_MODE]
             Log.i(TAG, "status:$status")
@@ -214,8 +214,9 @@ class MainFocusFragment : Fragment()
     }
 
     private fun setUsername() {
-        
-        mainFragment__header_username.text = sourceActivity.username
+
+        mainFragment__header_greeting.text = "${mainFragment__header_greeting.text} ${sourceActivity.username}"
+//        mainFragment__header_username.text = sourceActivity.username
     }
 
     private fun refreshBodyUI() {

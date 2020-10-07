@@ -91,6 +91,7 @@
 
             <TextView
                 android:id="@+id/mainFragment__header_username"
+                android:visibility="gone"
                 android:text="Genius"
                 android:textColor="@color/default_text_color"
                 android:textStyle="bold"

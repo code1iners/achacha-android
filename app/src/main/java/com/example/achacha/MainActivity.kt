@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity()
     // note. widgets-options
     lateinit var drawerView__options_darkMode_container: RelativeLayout
     lateinit var drawerView__options_darkMode_trigger: CheckBox
+    lateinit var drawerView__options_background_refresh_container: RelativeLayout
     // note. widgets-etc
     lateinit var drawerView__etc_report_container: RelativeLayout
 
@@ -170,21 +171,27 @@ class MainActivity : AppCompatActivity()
     }
 
     private fun initDrawerLayout() {
+        // note. drawer
         drawerLayout = findViewById(R.id.drawer_layout)
         drawerView = findViewById(R.id.drawer_view)
-        drawerLayout.setDrawerListener(this)
 
-        // note. data
+        // note. data-clear
         drawerView__data_clear_container = findViewById(R.id.drawerView__data_clear_container)
-        drawerView__data_clear_container.setOnClickListener(this)
         // note. options-darkMode
         drawerView__options_darkMode_container = findViewById(R.id.drawerView__options_darkMode_container)
-        drawerView__options_darkMode_container.setOnClickListener(this)
         drawerView__options_darkMode_trigger = findViewById(R.id.drawerView__options_darkMode_trigger)
-        drawerView__options_darkMode_trigger.setOnCheckedChangeListener(this)
+        drawerView__options_background_refresh_container = findViewById(R.id.drawerView__options_background_refresh_container)
         // note. etc
         drawerView__etc_report_container = findViewById(R.id.drawerView__etc_report_container)
+
+        // note. listener
+        drawerLayout.setDrawerListener(this)
+        drawerView__data_clear_container.setOnClickListener(this)
+        drawerView__options_darkMode_container.setOnClickListener(this)
+        drawerView__options_darkMode_trigger.setOnCheckedChangeListener(this)
+        drawerView__options_background_refresh_container.setOnClickListener(this)
         drawerView__etc_report_container.setOnClickListener(this)
+
     }
 
     private fun initScreenSettings() {
@@ -339,6 +346,43 @@ class MainActivity : AppCompatActivity()
 
                 R.id.drawerView__options_darkMode_container -> {
                     drawerView__options_darkMode_trigger.performClick()
+                }
+
+                R.id.drawerView__options_background_refresh_container -> {
+                    val background = getBackGroundImageByRandom()
+                    background?.run {
+                        val currentFragment = supportFragmentManager.findFragmentById(MAIN_CONTENTS_CONTAINER)
+                        Log.e(TAG, "currentFragment:$currentFragment" +
+                            "\nid:${currentFragment?.id}" +
+                            "\nname:${currentFragment?.javaClass?.simpleName}")
+
+                        try {
+                            when (currentFragment?.javaClass?.simpleName) {
+                                MainFragment.TAG -> {
+                                    val currentItem = mainFragment.mainFocusFragment__viewPager.currentItem
+                                    Log.e(TAG, "mainFragmentCurrentItem:$currentItem")
+                                    when (currentItem) {
+                                        0 -> {
+                                            mainFragment.mainFocusFragment?.displayBackground()
+                                        }
+
+                                        1 -> {
+                                            mainFragment.toDoFragment?.displayBackground()
+                                        }
+
+                                        else -> {
+                                            Log.e(TAG, "something is wrong")
+                                        }
+                                    }
+
+                                }
+
+                                else -> {
+                                    Log.e(TAG, "something is wrong")
+                                }
+                            }
+                        } catch (e: Exception) {e.printStackTrace()}
+                    }
                 }
 
                 R.id.drawerView__etc_report_container -> {
